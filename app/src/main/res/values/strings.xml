@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyQoran</string>
+    <string name="txt_page">Halaman %1$s</string>
+    <string name="txt_juz">Juz %1$s</string>
+</resources>
