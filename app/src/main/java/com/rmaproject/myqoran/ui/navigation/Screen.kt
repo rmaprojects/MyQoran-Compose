@@ -6,9 +6,15 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Settings : Screen("settings")
-    object ReadQoran: Screen("read?surahNumber={surahNumber}&juzNumber={juzNumber}&pageNumber={pageNumber}") {
-        fun createRoute(surahNumber: Int?, juzNumber: Int?, pageNumber: Int?) : String {
-            return "read?surahNumber=${surahNumber}&juzNumber=${juzNumber}&pageNumber=${pageNumber}"
+    object ReadQoran :
+        Screen("read?&indexType={indexType}&surahNumber={surahNumber}&juzNumber={juzNumber}&pageNumber={pageNumber}") {
+        fun createRoute(
+            indexType: Int,
+            surahNumber: Int?,
+            juzNumber: Int?,
+            pageNumber: Int?
+        ): String {
+            return "read?indexType=${indexType}&surahNumber=${surahNumber}&juzNumber=${juzNumber}&pageNumber=${pageNumber}"
         }
     }
 }

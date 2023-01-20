@@ -21,7 +21,7 @@ object AppModule {
             QoranDatabase::class.java,
             QoranDatabase.DATABASE_NAME,
         ).createFromInputStream {
-            app.applicationContext.resources.openRawResource(R.raw.quran)
+            app.applicationContext.resources.openRawResource(R.raw.qoran)
         }.build()
     }
 }

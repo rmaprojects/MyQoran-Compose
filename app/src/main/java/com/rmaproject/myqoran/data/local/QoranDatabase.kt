@@ -14,6 +14,6 @@ abstract class QoranDatabase : RoomDatabase() {
     abstract fun dao(): QoranDao
 
     companion object {
-        const val DATABASE_NAME = "quran.db"
+        const val DATABASE_NAME = "qoran.db"
     }
 }

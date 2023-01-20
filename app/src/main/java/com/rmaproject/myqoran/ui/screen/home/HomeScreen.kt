@@ -2,6 +2,7 @@ package com.rmaproject.myqoran.ui.screen.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -29,7 +30,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navigateToReadQoran: (Int?, Int?, Int?) -> Unit,
+    navigateToReadQoran: (Int, Int?, Int?, Int?) -> Unit,
     navigateToSearch: () -> Unit,
     openDrawer: () -> Unit,
     modifier: Modifier = Modifier,
@@ -98,7 +99,12 @@ fun HomeScreen(
                                     surahName = surah.surahNameEN!!,
                                     surahNameId = surah.surahNameID!!,
                                     surahNameAr = surah.surahNameArabic!!,
-                                    navigateToReadQoran = { navigateToReadQoran(surah.surahNumber, null, null) }
+                                    navigateToReadQoran = {
+                                        navigateToReadQoran(
+                                            ORDER_BY_SURAH,
+                                            surah.surahNumber, null, null
+                                        )
+                                    }
                                 )
                             }
                         }
@@ -110,7 +116,14 @@ fun HomeScreen(
                             items(juzState.juzList) { juz ->
                                 JuzCardItem(
                                     juzNumber = juz.juzNumber!!,
-                                    navigateToReadQoran = { navigateToReadQoran(null, juz.juzNumber, null) }
+                                    navigateToReadQoran = {
+                                        navigateToReadQoran(
+                                            ORDER_BY_JUZ,
+                                            null,
+                                            juz.juzNumber,
+                                            null
+                                        )
+                                    }
                                 )
                             }
                         }
@@ -119,10 +132,17 @@ fun HomeScreen(
                         LazyColumn(
                             modifier = Modifier.offset(currentPageOffset.dp)
                         ) {
-                            items(pageState.qoranByPageList) { qoranByPage->
+                            items(pageState.qoranByPageList) { qoranByPage ->
                                 PageCardItem(
                                     pageNumber = qoranByPage.pageNumber!!,
-                                    navigateToReadQoran = { navigateToReadQoran(null, null, qoranByPage.pageNumber) }
+                                    navigateToReadQoran = {
+                                        navigateToReadQoran(
+                                            ORDER_BY_PAGE,
+                                            null,
+                                            null,
+                                            qoranByPage.pageNumber
+                                        )
+                                    }
                                 )
                             }
                         }

@@ -2,6 +2,8 @@ package com.rmaproject.myqoran.data.local
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.rmaproject.myqoran.data.local.entities.Juz
 import com.rmaproject.myqoran.data.local.entities.Page
 import com.rmaproject.myqoran.data.local.entities.Qoran
@@ -19,6 +21,12 @@ interface QoranDao {
     @Query("SELECT * FROM Page")
     fun showQuranIndexByPage(): Flow<List<Page>>
 
-    @Query("SELECT sora, jozz, aya_no, aya_text, aya_text_emlaey, translation_id, sora_name_ar, sora_name_en, footnotes_id, translation_en, footnotes_en, sora_descend_place FROM quran WHERE page = :pageNumber")
-    fun readQuranByPage(pageNumber: Int): Flow<List<Qoran>>
+    @RawQuery(observedEntities = [Qoran::class])
+    fun readQuranBySurah(query: SupportSQLiteQuery): Flow<List<Qoran>>
+
+    @RawQuery(observedEntities = [Qoran::class])
+    fun readQuranByJuz(query: SupportSQLiteQuery): Flow<List<Qoran>>
+
+    @RawQuery(observedEntities = [Qoran::class])
+    fun readQuranByPage(query: SupportSQLiteQuery): Flow<List<Qoran>>
 }

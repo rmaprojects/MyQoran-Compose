@@ -57,9 +57,10 @@ fun MyQoranApp(
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
-                    navigateToReadQoran = { surahNumber, juzNumber, pageNumber ->
+                    navigateToReadQoran = { indexType, surahNumber, juzNumber, pageNumber ->
                         navController.navigate(
                             Screen.ReadQoran.createRoute(
+                                indexType,
                                 surahNumber,
                                 juzNumber,
                                 pageNumber
@@ -73,6 +74,10 @@ fun MyQoranApp(
             composable(
                 route = Screen.ReadQoran.route,
                 arguments = listOf(
+                    navArgument("indexType") {
+                        type = NavType.IntType
+                        defaultValue = 1
+                    },
                     navArgument("surahNumber") {
                         type = NavType.IntType
                         defaultValue = 1
@@ -87,7 +92,9 @@ fun MyQoranApp(
                     }
                 )
             ) {
-                ReadQoranScreen()
+                ReadQoranScreen(
+                    navigateUp = { navController.navigateUp() }
+                )
             }
             composable(Screen.Settings.route) {
                 SettingsScreen()
