@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,6 +20,7 @@ import androidx.navigation.navArgument
 import com.rmaproject.myqoran.components.MyQoranDrawer
 import com.rmaproject.myqoran.ui.navigation.MyQoranNavigationActions
 import com.rmaproject.myqoran.ui.navigation.Screen
+import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.HomeScreen
 import com.rmaproject.myqoran.ui.screen.read.ReadQoranScreen
 import com.rmaproject.myqoran.ui.screen.settings.SettingsScreen
@@ -38,6 +40,7 @@ fun MyQoranApp(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Home.route
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val totalAyahSharedViewModel: MyQoranSharedViewModel = viewModel()
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -68,7 +71,8 @@ fun MyQoranApp(
                         )
                     },
                     navigateToSearch = {},
-                    openDrawer = { scope.launch { drawerState.open() } }
+                    openDrawer = { scope.launch { drawerState.open() } },
+                    sharedViewModel = totalAyahSharedViewModel
                 )
             }
             composable(
@@ -93,7 +97,8 @@ fun MyQoranApp(
                 )
             ) {
                 ReadQoranScreen(
-                    navigateUp = { navController.navigateUp() }
+                    navigateUp = { navController.navigateUp() },
+                    sharedViewModel = totalAyahSharedViewModel
                 )
             }
             composable(Screen.Settings.route) {

@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,9 +28,9 @@ fun SurahCardItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(96.dp)
             .padding(4.dp),
-        onClick = { navigateToReadQoran() }
+        onClick = navigateToReadQoran
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -65,19 +67,23 @@ fun SurahCardItem(
                     text = surahName,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.titleLarge
                 )
                 Text(
                     text = surahNameId,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
             Text(
                 modifier = Modifier.weight(1f),
                 text = surahNameAr,
-                color = MaterialTheme.colorScheme.onBackground
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.usmani_font))
+                )
             )
         }
     }
@@ -93,9 +99,9 @@ fun JuzCardItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(96.dp)
             .padding(4.dp),
-        onClick = { navigateToReadQoran() }
+        onClick = navigateToReadQoran
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -132,7 +138,7 @@ fun JuzCardItem(
                     text = stringResource(R.string.txt_juz, juzNumber),
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
         }
@@ -149,9 +155,9 @@ fun PageCardItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(96.dp)
             .padding(4.dp),
-        onClick = { navigateToReadQoran() }
+        onClick = navigateToReadQoran
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -188,7 +194,7 @@ fun PageCardItem(
                     text = stringResource(R.string.txt_page, pageNumber),
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
         }

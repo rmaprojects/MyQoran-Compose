@@ -1,17 +1,15 @@
 package com.rmaproject.myqoran.ui.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,19 +19,21 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.rmaproject.myqoran.components.MyQoranAppBar
+import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.components.JuzCardItem
 import com.rmaproject.myqoran.ui.screen.home.components.PageCardItem
 import com.rmaproject.myqoran.ui.screen.home.components.SurahCardItem
 import com.rmaproject.myqoran.ui.screen.home.components.tabItems
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     navigateToReadQoran: (Int, Int?, Int?, Int?) -> Unit,
     navigateToSearch: () -> Unit,
     openDrawer: () -> Unit,
     modifier: Modifier = Modifier,
+    sharedViewModel: MyQoranSharedViewModel,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val pagerState = rememberPagerState()
@@ -42,6 +42,10 @@ fun HomeScreen(
     val surahState = viewModel.surahState.value
     val juzState = viewModel.juzState.value
     val pageState = viewModel.pageState.value
+
+    LaunchedEffect(surahState) {
+        sharedViewModel.setTotalAyah(surahState.surahList)
+    }
 
     Scaffold(
         modifier = modifier,
@@ -93,7 +97,10 @@ fun HomeScreen(
                         LazyColumn(
                             modifier = Modifier.offset(currentPageOffset.dp)
                         ) {
-                            items(surahState.surahList) { surah ->
+                            items(
+                                surahState.surahList,
+                                key = { it.id!! }
+                            ) { surah ->
                                 SurahCardItem(
                                     ayahNumber = surah.surahNumber!!,
                                     surahName = surah.surahNameEN!!,

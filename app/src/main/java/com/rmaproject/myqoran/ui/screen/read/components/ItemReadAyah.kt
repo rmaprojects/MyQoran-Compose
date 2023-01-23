@@ -1,13 +1,18 @@
 package com.rmaproject.myqoran.ui.screen.read.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.ui.theme.ReadQoranTextStyle
 
 @Composable
@@ -50,6 +55,7 @@ fun ItemReadAyahPreview() {
 @Composable
 fun ItemSurahCard(
     surahName: String,
+    surahNameAr: String,
     totalAyah: Int,
     descendPlace: String,
     modifier: Modifier = Modifier,
@@ -63,32 +69,66 @@ fun ItemSurahCard(
         colors = CardDefaults.outlinedCardColors(),
         elevation = CardDefaults.outlinedCardElevation()
     ) {
-        Column(
-            modifier = Modifier.padding(12.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+            Column(
+                modifier = Modifier.padding(12.dp)
             ) {
-                Text(
-                    text = surahName,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineMedium
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text(
-                    text = "$totalAyah Ayat",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = descendPlace,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = surahName,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        text = descendPlace,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "$totalAyah Ayat",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = surahNameAr,
+                        modifier = Modifier.align(Alignment.Center),
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontFamily = FontFamily(Font(R.font.usmani_font))
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        modifier = Modifier.align(Alignment.Center),
+                        shape = ButtonDefaults.elevatedShape,
+                        colors = ButtonDefaults.elevatedButtonColors(),
+                        elevation = ButtonDefaults.elevatedButtonElevation(),
+                        onClick = {}
+                    ) {
+                        Icon(Icons.Default.PlayCircle, contentDescription = null)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Play All Ayah")
+                    }
+                }
             }
         }
     }
@@ -100,6 +140,7 @@ fun ItemSurahCard(
 fun ItemSurahCardPreview() {
     ItemSurahCard(
         "Al Fatihah",
+        " الفاتحة",
         7,
         "Meccan"
     )

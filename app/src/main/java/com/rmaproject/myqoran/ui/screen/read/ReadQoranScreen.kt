@@ -1,10 +1,7 @@
 package com.rmaproject.myqoran.ui.screen.read
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -20,10 +17,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_JUZ
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_PAGE
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_SURAH
 import com.rmaproject.myqoran.ui.screen.read.components.ItemReadAyah
+import com.rmaproject.myqoran.ui.screen.read.components.ItemSurahCard
 import com.rmaproject.myqoran.ui.screen.read.components.ReadQoranDrawer
 import com.rmaproject.myqoran.ui.screen.read.components.ReadTopBar
 import kotlinx.coroutines.launch
@@ -35,6 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ReadQoranScreen(
     navigateUp: () -> Unit,
+    sharedViewModel: MyQoranSharedViewModel,
     modifier: Modifier = Modifier,
     viewModel: ReadQoranViewModel = hiltViewModel()
 ) {
@@ -44,6 +44,9 @@ fun ReadQoranScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val qoranAyahList = viewModel.qoranState.value.listAyah
+    val totalAyahs = remember {
+        sharedViewModel.getTotalAyah()
+    }
 
     val pageTotal = when (viewModel.indexType) {
         ORDER_BY_SURAH -> SURAH_TOTAL
@@ -98,8 +101,18 @@ fun ReadQoranScreen(
                             contentPadding = PaddingValues(12.dp)
                         ) {
                             items(
-                                qoranAyahList
-                            ) { qoran ->
+                                qoranAyahList.size
+                            ) { index ->
+                                val qoran = qoranAyahList[index]
+                                if (qoran.ayahNumber == 1) {
+                                    ItemSurahCard(
+                                        modifier = Modifier.padding(vertical = 12.dp),
+                                        surahName = qoran.surahNameEn!!,
+                                        surahNameAr = qoran.surahNameAr!!,
+                                        totalAyah = totalAyahs?.get(index)!!,
+                                        descendPlace = qoran.surahDescendPlace!!
+                                    )
+                                }
                                 ItemReadAyah(
                                     ayahText = qoran.ayahText,
                                     ayahTranslate = qoran.translation_id
@@ -121,5 +134,5 @@ private const val JUZ_TOTAL = 30
 @Preview
 @Composable
 fun ReadQoranScreenPreview() {
-    ReadQoranScreen({})
+    ReadQoranScreen({},MyQoranSharedViewModel())
 }

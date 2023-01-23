@@ -7,6 +7,6 @@ import androidx.compose.ui.unit.sp
 import com.rmaproject.myqoran.R
 
 val ReadQoranTextStyle = TextStyle(
-    fontSize = 32.sp,
+    fontSize = 35.sp,
     fontFamily = FontFamily(Font(R.font.usmani_font))
 )
