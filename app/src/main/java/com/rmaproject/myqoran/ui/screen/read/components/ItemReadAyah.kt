@@ -1,5 +1,6 @@
 package com.rmaproject.myqoran.ui.screen.read.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayCircle
@@ -10,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.ui.theme.ReadQoranTextStyle
@@ -27,29 +27,21 @@ fun ItemReadAyah(
     ) {
         Column {
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 text = ayahText ?: "",
                 textAlign = TextAlign.End,
                 style = ReadQoranTextStyle
             )
             Spacer(Modifier.height(32.dp))
-            Text(
+            SpannableText(
                 text = ayahTranslate ?: "",
-                textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.bodyLarge
+                onClick = {
+                    Log.d("CLICK", it)
+                },
             )
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun ItemReadAyahPreview() {
-    ItemReadAyah(
-        "بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-        "Dengan nama Alloh yang Maha Pengasih lagi Maha Penyayang"
-    )
 }
 
 @Composable
@@ -134,14 +126,29 @@ fun ItemSurahCard(
     }
 }
 
-
-@Preview
-@Composable
-fun ItemSurahCardPreview() {
-    ItemSurahCard(
-        "Al Fatihah",
-        " الفاتحة",
-        7,
-        "Meccan"
-    )
-}
+//@Composable
+//fun ClickableTextTranslate(
+//    ayahTranslate: String?,
+//    onClick: ()-> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    val pattern = Pattern.compile("""\d""", Pattern.CASE_INSENSITIVE)
+//    val matcher = pattern.matcher(ayahTranslate ?: "")
+//    val annotatedString = buildAnnotatedString {
+//        while (matcher.find()) {
+//            withStyle(
+//                style = SpanStyle(color = MaterialTheme.colorScheme.primary)
+//            ) {
+//                append()
+//            }
+//        }
+//    }
+//    ClickableText(
+//        modifier = modifier,
+//        text = annotatedString,
+//        style = MaterialTheme.typography.bodyLarge,
+//        onClick = { offset ->
+//
+//        }
+//    )
+//}

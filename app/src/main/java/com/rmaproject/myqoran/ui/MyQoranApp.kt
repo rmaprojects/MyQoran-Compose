@@ -102,7 +102,9 @@ fun MyQoranApp(
                 )
             }
             composable(Screen.Settings.route) {
-                SettingsScreen()
+                SettingsScreen(
+                    openDrawer = { scope.launch{ drawerState.open() } }
+                )
             }
         }
     }

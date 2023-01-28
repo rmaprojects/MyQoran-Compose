@@ -4,17 +4,17 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 
 sealed class Screen(val route: String) {
-    object Home : Screen("home")
-    object Settings : Screen("settings")
+    object Home : Screen("Home")
+    object Settings : Screen("Settings")
     object ReadQoran :
-        Screen("read?&indexType={indexType}&surahNumber={surahNumber}&juzNumber={juzNumber}&pageNumber={pageNumber}") {
+        Screen("Read?&indexType={indexType}&surahNumber={surahNumber}&juzNumber={juzNumber}&pageNumber={pageNumber}") {
         fun createRoute(
             indexType: Int,
             surahNumber: Int?,
             juzNumber: Int?,
             pageNumber: Int?
         ): String {
-            return "read?indexType=${indexType}&surahNumber=${surahNumber}&juzNumber=${juzNumber}&pageNumber=${pageNumber}"
+            return "Read?indexType=${indexType}&surahNumber=${surahNumber}&juzNumber=${juzNumber}&pageNumber=${pageNumber}"
         }
     }
 }

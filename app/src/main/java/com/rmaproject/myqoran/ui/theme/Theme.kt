@@ -1,10 +1,10 @@
 package com.rmaproject.myqoran.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
 
 
 private val LightColors = lightColorScheme(
@@ -74,7 +74,7 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun MyQoranComposeTheme(
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    useDarkTheme: Boolean = SettingsPreferences.isDarkMode,
     content: @Composable () -> Unit
 ) {
 

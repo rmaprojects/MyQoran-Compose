@@ -29,4 +29,13 @@ interface QoranDao {
 
     @RawQuery(observedEntities = [Qoran::class])
     fun readQuranByPage(query: SupportSQLiteQuery): Flow<List<Qoran>>
+
+    @Query("SELECT id, sora, sora_name_en FROM quran GROUP BY sora")
+    fun getSurahList(): Flow<List<Qoran>>
+
+    @Query("SELECT id, jozz FROM quran GROUP BY jozz")
+    fun getJuzList(): Flow<List<Qoran>>
+
+    @Query("SELECT id, page FROM quran GROUP BY page")
+    fun getPageList(): Flow<List<Qoran>>
 }

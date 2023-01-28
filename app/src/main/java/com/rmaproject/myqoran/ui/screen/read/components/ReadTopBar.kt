@@ -17,6 +17,7 @@ fun ReadTopBar(
     modifier: Modifier = Modifier
 ) {
     CenterAlignedTopAppBar(
+        modifier = modifier,
         title = { Text(text = currentSurahOrAyahOrJuz ?: "Read Qoran") },
         actions = {
             IconButton(onClick = openDrawer) {

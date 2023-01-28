@@ -23,6 +23,7 @@ import com.rmaproject.myqoran.R
 fun MyQoranAppBar(
     goToSearch: () -> Unit,
     openDrawer: () -> Unit,
+    currentDestination: String?,
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
@@ -31,22 +32,30 @@ fun MyQoranAppBar(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(R.drawable.myqoransvglogo),
-                    contentDescription = null,
-                    contentScale = ContentScale.Inside,
-                    modifier = Modifier
-                        .height(28.dp)
-                        .padding(end = 8.dp)
-                )
-                Column {
-                    Text(
-                        text = "MyQoran",
-                        style = MaterialTheme.typography.labelLarge
+                if (currentDestination.isNullOrEmpty()) {
+                    Image(
+                        painter = painterResource(R.drawable.myqoransvglogo),
+                        contentDescription = null,
+                        contentScale = ContentScale.Inside,
+                        modifier = Modifier
+                            .height(28.dp)
+                            .padding(end = 8.dp)
                     )
+                    Column {
+                        Text(
+                            text = "MyQoran",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                        Text(
+                            text = "by RMA Projects",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+                else {
                     Text(
-                        text = "by RMA Projects",
-                        style = MaterialTheme.typography.labelSmall
+                        text = currentDestination,
+                        style = MaterialTheme.typography.titleLarge
                     )
                 }
             }
@@ -60,20 +69,21 @@ fun MyQoranAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { goToSearch() }) {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = "Navigate to Search Screen"
-                )
+            if (currentDestination.isNullOrEmpty()) {
+                IconButton(onClick = { goToSearch() }) {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = "Navigate to Search Screen"
+                    )
+                }
             }
         },
     )
 }
 
 
-
 @Preview
 @Composable
 fun MyQoranAppBarPreview() {
-    MyQoranAppBar({}, {})
+    MyQoranAppBar({}, {}, null)
 }

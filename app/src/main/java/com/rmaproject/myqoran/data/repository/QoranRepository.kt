@@ -1,6 +1,5 @@
 package com.rmaproject.myqoran.data.repository
 
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.rmaproject.myqoran.data.local.QoranDatabase
 import com.rmaproject.myqoran.data.local.entities.Juz
 import com.rmaproject.myqoran.data.local.entities.Page
@@ -38,6 +37,18 @@ class QoranRepository @Inject constructor(
     fun getReadQoranBySurah(surahNumber: Int): Flow<List<Qoran>> {
         val query = Queries.getReadBySurahQuery(surahNumber)
         return db.dao().readQuranBySurah(query)
+    }
+
+    fun getSurahList(): Flow<List<Qoran>> {
+        return db.dao().getSurahList()
+    }
+
+    fun getJuzList(): Flow<List<Qoran>> {
+        return db.dao().getJuzList()
+    }
+
+    fun getPageList(): Flow<List<Qoran>> {
+        return db.dao().getPageList()
     }
 
 }
