@@ -1,5 +1,6 @@
 package com.rmaproject.myqoran.data.repository
 
+import com.rmaproject.myqoran.data.local.BookmarkDatabase
 import com.rmaproject.myqoran.data.local.QoranDatabase
 import com.rmaproject.myqoran.data.local.entities.Juz
 import com.rmaproject.myqoran.data.local.entities.Page
@@ -10,45 +11,45 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class QoranRepository @Inject constructor(
-    private val db: QoranDatabase
+    private val qoranDatabase: QoranDatabase,
+    private val bookmarkDatabase: BookmarkDatabase
 ) {
     fun getQoranIndexBySurah(): Flow<List<Surah>> {
-        return db.dao().showQuranIndexBySurah()
+        return qoranDatabase.qoranDao().showQuranIndexBySurah()
     }
 
     fun getQoranIndexByJuz(): Flow<List<Juz>> {
-        return db.dao().showQuranIndexByJuz()
+        return qoranDatabase.qoranDao().showQuranIndexByJuz()
     }
 
     fun getQoranIndexByPage(): Flow<List<Page>> {
-        return db.dao().showQuranIndexByPage()
+        return qoranDatabase.qoranDao().showQuranIndexByPage()
     }
 
     fun getReadQoranByPage(pageNumber: Int): Flow<List<Qoran>> {
         val query = Queries.getReadByPageQuery(pageNumber)
-        return db.dao().readQuranByPage(query)
+        return qoranDatabase.qoranDao().readQuranByPage(query)
     }
 
     fun getReadQoranByJuz(juzNumber: Int): Flow<List<Qoran>> {
         val query = Queries.getReadByJuzQuery(juzNumber)
-        return db.dao().readQuranByJuz(query)
+        return qoranDatabase.qoranDao().readQuranByJuz(query)
     }
 
     fun getReadQoranBySurah(surahNumber: Int): Flow<List<Qoran>> {
         val query = Queries.getReadBySurahQuery(surahNumber)
-        return db.dao().readQuranBySurah(query)
+        return qoranDatabase.qoranDao().readQuranBySurah(query)
     }
 
     fun getSurahList(): Flow<List<Qoran>> {
-        return db.dao().getSurahList()
+        return qoranDatabase.qoranDao().getSurahList()
     }
 
     fun getJuzList(): Flow<List<Qoran>> {
-        return db.dao().getJuzList()
+        return qoranDatabase.qoranDao().getJuzList()
     }
 
     fun getPageList(): Flow<List<Qoran>> {
-        return db.dao().getPageList()
+        return qoranDatabase.qoranDao().getPageList()
     }
-
 }

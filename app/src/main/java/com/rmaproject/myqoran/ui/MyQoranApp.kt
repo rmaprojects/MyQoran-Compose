@@ -19,8 +19,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.rmaproject.myqoran.components.MyQoranDrawer
 import com.rmaproject.myqoran.ui.navigation.MyQoranNavigationActions
-import com.rmaproject.myqoran.ui.navigation.Screen
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
+import com.rmaproject.myqoran.ui.navigation.Screen
+import com.rmaproject.myqoran.ui.screen.adzan.AdzanScheduleScreen
+import com.rmaproject.myqoran.ui.screen.findqibla.FindQiblaScreen
 import com.rmaproject.myqoran.ui.screen.home.HomeScreen
 import com.rmaproject.myqoran.ui.screen.read.ReadQoranScreen
 import com.rmaproject.myqoran.ui.screen.settings.SettingsScreen
@@ -58,22 +60,16 @@ fun MyQoranApp(
             navController = navController,
             startDestination = Screen.Home.route
         ) {
-            composable(Screen.Home.route) {
-                HomeScreen(
-                    navigateToReadQoran = { indexType, surahNumber, juzNumber, pageNumber ->
-                        navController.navigate(
-                            Screen.ReadQoran.createRoute(
-                                indexType,
-                                surahNumber,
-                                juzNumber,
-                                pageNumber
-                            )
-                        )
-                    },
-                    navigateToSearch = {},
-                    openDrawer = { scope.launch { drawerState.open() } },
-                    sharedViewModel = totalAyahSharedViewModel
+            composable(Screen.Settings.route) {
+                SettingsScreen(
+                    openDrawer = { scope.launch { drawerState.open() } }
                 )
+            }
+            composable(Screen.AdzanSchedule.route) {
+                AdzanScheduleScreen()
+            }
+            composable(Screen.FindQibla.route) {
+                FindQiblaScreen()
             }
             composable(
                 route = Screen.ReadQoran.route,
@@ -101,9 +97,21 @@ fun MyQoranApp(
                     sharedViewModel = totalAyahSharedViewModel
                 )
             }
-            composable(Screen.Settings.route) {
-                SettingsScreen(
-                    openDrawer = { scope.launch{ drawerState.open() } }
+            composable(Screen.Home.route) {
+                HomeScreen(
+                    navigateToReadQoran = { indexType, surahNumber, juzNumber, pageNumber ->
+                        navController.navigate(
+                            Screen.ReadQoran.createRoute(
+                                indexType,
+                                surahNumber,
+                                juzNumber,
+                                pageNumber
+                            )
+                        )
+                    },
+                    navigateToSearch = {},
+                    openDrawer = { scope.launch { drawerState.open() } },
+                    sharedViewModel = totalAyahSharedViewModel
                 )
             }
         }

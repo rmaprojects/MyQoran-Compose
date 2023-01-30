@@ -3,6 +3,7 @@ package com.rmaproject.myqoran.di
 import android.app.Application
 import androidx.room.Room
 import com.rmaproject.myqoran.R
+import com.rmaproject.myqoran.data.local.BookmarkDatabase
 import com.rmaproject.myqoran.data.local.QoranDatabase
 import com.rmaproject.myqoran.service.MyPlayerService
 import dagger.Module
@@ -25,6 +26,16 @@ object AppModule {
         ).createFromInputStream {
             app.applicationContext.resources.openRawResource(R.raw.qoran)
         }.build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookmarkDatabase(app: Application): BookmarkDatabase {
+        return Room.databaseBuilder(
+            app.applicationContext,
+            BookmarkDatabase::class.java,
+            BookmarkDatabase.DATABASE_NAME
+        ).build()
     }
 
     @Provides

@@ -20,6 +20,12 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+        buildConfigField "String", "AUDIO_BASE_URL", "\"${properties.getProperty("AUDIO_BASE_URL")}\""
+        buildConfigField "String", "NOTIFICATION_ICON_URL", "\"${properties.getProperty("NOTIFICATION_ICON_URL")}\""
     }
 
     buildTypes {
@@ -86,6 +92,7 @@ dependencies {
     //Kotpref
     implementation 'com.chibatching.kotpref:kotpref:2.13.1'
     implementation 'com.chibatching.kotpref:initializer:2.13.1'
+    implementation 'com.chibatching.kotpref:enum-support:2.13.1'
 
     //Snow
     implementation 'com.github.jrfeng.snow:player:1.2'

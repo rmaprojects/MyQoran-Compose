@@ -27,7 +27,9 @@ import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_JUZ
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_PAGE
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_SURAH
 import com.rmaproject.myqoran.ui.screen.read.components.*
+import com.rmaproject.myqoran.ui.screen.read.events.PlayAyahEvent
 import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranEvent
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(
@@ -57,6 +59,8 @@ fun ReadQoranScreen(
     }
 
     val qoranAyahList = viewModel.qoranState.value.listAyah
+    val currentPlayingAyah = viewModel.currentPlayedAyah.value
+    val playType = viewModel.playerType
 
     LaunchedEffect(Unit) {
         scope.launch {
@@ -89,20 +93,23 @@ fun ReadQoranScreen(
     }
 
     viewModel.observeAbleCurrentReading.observe(lifecycleOwner) { qoranList ->
-        val currentReading =
-            when (viewModel.indexType) {
-                ORDER_BY_SURAH -> qoranList[pagerState.currentPage - 1].surahNameEn
-                ORDER_BY_JUZ -> context.resources.getString(
-                    R.string.txt_juz,
-                    qoranList[pagerState.currentPage - 1].juzNumber.toString()
-                )
-                ORDER_BY_PAGE -> context.resources.getString(
-                    R.string.txt_page,
-                    qoranList[pagerState.currentPage - 1].page.toString()
-                )
-                else -> throw Exception("Unknown Type")
-            }
-        viewModel.onEvent(ReadQoranEvent.SetCurrentReading(currentReading ?: ""))
+        scope.launch {
+            delay(200)
+            val currentReading =
+                when (viewModel.indexType) {
+                    ORDER_BY_SURAH -> qoranList[pagerState.currentPage - 1].surahNameEn
+                    ORDER_BY_JUZ -> context.resources.getString(
+                        R.string.txt_juz,
+                        qoranList[pagerState.currentPage - 1].juzNumber.toString()
+                    )
+                    ORDER_BY_PAGE -> context.resources.getString(
+                        R.string.txt_page,
+                        qoranList[pagerState.currentPage - 1].page.toString()
+                    )
+                    else -> throw Exception("Unknown Type")
+                }
+            viewModel.onEvent(ReadQoranEvent.SetCurrentReading(currentReading ?: ""))
+        }
     }
 
     ReadQoranDrawer(
@@ -135,6 +142,21 @@ fun ReadQoranScreen(
                             currentSurahOrAyahOrJuz = viewModel.currentReadingState.value
                         )
                     },
+                    bottomBar = {
+                        if (
+                            playType.value == ReadQoranViewModel.PlayType.PLAY_SINGLE ||
+                            playType.value == ReadQoranViewModel.PlayType.PLAY_ALL
+                        ) {
+                            PlayerControlPanelBottomBar(
+                                currentPlaying = currentPlayingAyah,
+                                playType = playType.value,
+                                onSkipNextClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipNext) },
+                                onPlayPauseClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.PlayPauseAyah) },
+                                onSkipPrevClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipPrevious) },
+                                onStopClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.StopAyah) }
+                            )
+                        }
+                    }
                 ) { innerPadding ->
                     Column(
                         Modifier.padding(innerPadding)
@@ -161,8 +183,16 @@ fun ReadQoranScreen(
                                         )
                                     }
                                     ReadControlPanel(
-                                        modifier = Modifier.padding(vertical = 4.dp),
-                                        onPlayAyahClick = { /*TODO*/ },
+                                        modifier = Modifier.padding(vertical = 8.dp),
+                                        onPlayAyahClick = {
+                                            viewModel.onEvent(
+                                                ReadQoranEvent.PlayAyah(
+                                                    ayahNumber = qoran.ayahNumber!!,
+                                                    surahNumber = qoran.surahNumber!!,
+                                                    surahName = qoran.surahNameEn!!
+                                                )
+                                            )
+                                        },
                                         onCopyAyahClick = {
                                             viewModel.onEvent(
                                                 ReadQoranEvent.CopyAyah(

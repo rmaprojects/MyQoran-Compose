@@ -11,7 +11,7 @@ import com.rmaproject.myqoran.data.local.entities.*
     exportSchema = false
 )
 abstract class QoranDatabase : RoomDatabase() {
-    abstract fun dao(): QoranDao
+    abstract fun qoranDao(): QoranDao
 
     companion object {
         const val DATABASE_NAME = "qoran.db"

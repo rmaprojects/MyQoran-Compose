@@ -21,4 +21,10 @@ sealed class ReadQoranEvent {
     data class ChangePage(val newPage: Int) : ReadQoranEvent()
     data class GetNewAyah(val ayahList: List<Qoran>) : ReadQoranEvent()
     data class SetCurrentReading(val currentReading: String) : ReadQoranEvent()
+
+    data class PlayAyah(
+        val ayahNumber: Int,
+        val surahNumber: Int,
+        val surahName: String
+    ): ReadQoranEvent()
 }

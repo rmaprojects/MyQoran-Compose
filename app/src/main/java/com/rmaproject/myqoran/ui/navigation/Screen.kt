@@ -17,6 +17,8 @@ sealed class Screen(val route: String) {
             return "Read?indexType=${indexType}&surahNumber=${surahNumber}&juzNumber=${juzNumber}&pageNumber=${pageNumber}"
         }
     }
+    object FindQibla: Screen("FindQibla")
+    object AdzanSchedule: Screen("AdzanSchedule")
 }
 
 class MyQoranNavigationActions(navController: NavController) {

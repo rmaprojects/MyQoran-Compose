@@ -53,25 +53,25 @@ fun ReadControlPanel(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isExpanded) {
-                IconButton(onClick = onShareAyahClick) {
+                IconButton(onClick = { onShareAyahClick(); isExpanded = false }) {
                     Icon(
                         Icons.Default.Share,
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = onCopyAyahClick) {
+                IconButton(onClick = { onCopyAyahClick(); isExpanded = false }) {
                     Icon(
                         Icons.Default.ContentCopy,
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = onPlayAyahClick) {
+                IconButton(onClick = { onPlayAyahClick(); isExpanded = false }) {
                     Icon(
                         Icons.Outlined.PlayArrow,
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = onBookmarkAyahClick) {
+                IconButton(onClick = { onBookmarkAyahClick(); isExpanded = false }) {
                     Icon(
                         Icons.Default.Bookmark,
                         contentDescription = null

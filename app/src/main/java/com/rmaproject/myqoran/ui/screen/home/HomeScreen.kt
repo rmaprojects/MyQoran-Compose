@@ -7,7 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Minimize
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -72,7 +72,7 @@ fun HomeScreen(
         },
         backgroundColor = MaterialTheme.colorScheme.background,
         sheetGesturesEnabled = true,
-        sheetPeekHeight = (((screenHeight * 25) / 100) + 128).dp,
+        sheetPeekHeight = ((screenHeight * 45) / 100).dp,
         sheetBackgroundColor = MaterialTheme.colorScheme.background,
         sheetContent = {
             SheetContent(
@@ -143,7 +143,7 @@ fun SheetContent(
                 onClick = { expandBottomSheet() },
                 modifier = Modifier.align(Alignment.Center)
             ) {
-                Icon(Icons.Default.Minimize, contentDescription = "Expand Bottomsheet")
+                Icon(Icons.Default.Remove, contentDescription = "Expand Bottomsheet")
             }
         }
         TabRow(
