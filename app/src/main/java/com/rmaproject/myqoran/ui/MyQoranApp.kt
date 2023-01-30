@@ -22,6 +22,7 @@ import com.rmaproject.myqoran.ui.navigation.MyQoranNavigationActions
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.navigation.Screen
 import com.rmaproject.myqoran.ui.screen.adzan.AdzanScheduleScreen
+import com.rmaproject.myqoran.ui.screen.bookmark.BookmarkScreen
 import com.rmaproject.myqoran.ui.screen.findqibla.FindQiblaScreen
 import com.rmaproject.myqoran.ui.screen.home.HomeScreen
 import com.rmaproject.myqoran.ui.screen.read.ReadQoranScreen
@@ -52,18 +53,13 @@ fun MyQoranApp(
                 navigateToHome = navActions.navigateToHome,
                 navigateToSettings = navActions.navigateToSettings
             )
-        },
-        drawerState = drawerState,
-        gesturesEnabled = currentRoute != Screen.ReadQoran.route
+        }, drawerState = drawerState, gesturesEnabled = currentRoute != Screen.ReadQoran.route
     ) {
         NavHost(
-            navController = navController,
-            startDestination = Screen.Home.route
+            navController = navController, startDestination = Screen.Home.route
         ) {
             composable(Screen.Settings.route) {
-                SettingsScreen(
-                    openDrawer = { scope.launch { drawerState.open() } }
-                )
+                SettingsScreen(openDrawer = { scope.launch { drawerState.open() } })
             }
             composable(Screen.AdzanSchedule.route) {
                 AdzanScheduleScreen()
@@ -71,27 +67,32 @@ fun MyQoranApp(
             composable(Screen.FindQibla.route) {
                 FindQiblaScreen()
             }
-            composable(
-                route = Screen.ReadQoran.route,
-                arguments = listOf(
-                    navArgument("indexType") {
-                        type = NavType.IntType
-                        defaultValue = 1
-                    },
-                    navArgument("surahNumber") {
-                        type = NavType.IntType
-                        defaultValue = 1
-                    },
-                    navArgument("juzNumber") {
-                        type = NavType.IntType
-                        defaultValue = 1
-                    },
-                    navArgument("pageNumber") {
-                        type = NavType.IntType
-                        defaultValue = 1
-                    }
-                )
-            ) {
+            composable(Screen.Bookmarks.route) {
+                BookmarkScreen(navigateUp = { navController.navigateUp() },
+                    navigateToRead = { indexType: Int, surahNumber: Int?, juzNumber: Int?, pageNumber: Int?, scrollPosition: Int? ->
+                        navController.navigate(
+                            Screen.ReadQoran.createRoute(
+                                indexType, surahNumber, juzNumber, pageNumber, scrollPosition
+                            )
+                        )
+                    })
+            }
+            composable(route = Screen.ReadQoran.route, arguments = listOf(navArgument("indexType") {
+                type = NavType.IntType
+                defaultValue = 1
+            }, navArgument("surahNumber") {
+                type = NavType.IntType
+                defaultValue = 1
+            }, navArgument("juzNumber") {
+                type = NavType.IntType
+                defaultValue = 1
+            }, navArgument("pageNumber") {
+                type = NavType.IntType
+                defaultValue = 1
+            }, navArgument("scrollPosition") {
+                type = NavType.IntType
+                defaultValue = 0
+            })) {
                 ReadQoranScreen(
                     navigateUp = { navController.navigateUp() },
                     sharedViewModel = totalAyahSharedViewModel
@@ -102,14 +103,12 @@ fun MyQoranApp(
                     navigateToReadQoran = { indexType, surahNumber, juzNumber, pageNumber ->
                         navController.navigate(
                             Screen.ReadQoran.createRoute(
-                                indexType,
-                                surahNumber,
-                                juzNumber,
-                                pageNumber
+                                indexType, surahNumber, juzNumber, pageNumber, null
                             )
                         )
                     },
                     navigateToSearch = {},
+                    navigateToBookmark = { navController.navigate(Screen.Bookmarks.route) },
                     openDrawer = { scope.launch { drawerState.open() } },
                     sharedViewModel = totalAyahSharedViewModel
                 )

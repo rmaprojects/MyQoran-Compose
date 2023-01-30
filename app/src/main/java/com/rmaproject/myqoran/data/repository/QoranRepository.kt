@@ -2,10 +2,7 @@ package com.rmaproject.myqoran.data.repository
 
 import com.rmaproject.myqoran.data.local.BookmarkDatabase
 import com.rmaproject.myqoran.data.local.QoranDatabase
-import com.rmaproject.myqoran.data.local.entities.Juz
-import com.rmaproject.myqoran.data.local.entities.Page
-import com.rmaproject.myqoran.data.local.entities.Qoran
-import com.rmaproject.myqoran.data.local.entities.Surah
+import com.rmaproject.myqoran.data.local.entities.*
 import com.rmaproject.myqoran.utils.Queries
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -51,5 +48,21 @@ class QoranRepository @Inject constructor(
 
     fun getPageList(): Flow<List<Qoran>> {
         return qoranDatabase.qoranDao().getPageList()
+    }
+
+    fun getBookmarks(): Flow<List<Bookmark>> {
+        return bookmarkDatabase.bookmarkDao().getBookmarks()
+    }
+
+    suspend fun insertBookmark(bookmark: Bookmark) {
+        bookmarkDatabase.bookmarkDao().insertBookmark(bookmark)
+    }
+
+    suspend fun deleteBookmark(bookmark: Bookmark) {
+        bookmarkDatabase.bookmarkDao().deleteBookmark(bookmark)
+    }
+
+    suspend fun deleteAllBookmark() {
+        bookmarkDatabase.bookmarkDao().deleteAllBookmark()
     }
 }

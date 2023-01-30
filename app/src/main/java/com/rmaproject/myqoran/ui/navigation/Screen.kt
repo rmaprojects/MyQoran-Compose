@@ -7,18 +7,20 @@ sealed class Screen(val route: String) {
     object Home : Screen("Home")
     object Settings : Screen("Settings")
     object ReadQoran :
-        Screen("Read?&indexType={indexType}&surahNumber={surahNumber}&juzNumber={juzNumber}&pageNumber={pageNumber}") {
+        Screen("Read?&indexType={indexType}&surahNumber={surahNumber}&juzNumber={juzNumber}&pageNumber={pageNumber}&scrollPosition={scrollPosition}") {
         fun createRoute(
             indexType: Int,
             surahNumber: Int?,
             juzNumber: Int?,
-            pageNumber: Int?
+            pageNumber: Int?,
+            scrollPosition: Int?
         ): String {
-            return "Read?indexType=${indexType}&surahNumber=${surahNumber}&juzNumber=${juzNumber}&pageNumber=${pageNumber}"
+            return "Read?indexType=${indexType}&surahNumber=${surahNumber}&juzNumber=${juzNumber}&pageNumber=${pageNumber}&scrollPosition=${scrollPosition}"
         }
     }
     object FindQibla: Screen("FindQibla")
     object AdzanSchedule: Screen("AdzanSchedule")
+    object Bookmarks: Screen("Bookmarks")
 }
 
 class MyQoranNavigationActions(navController: NavController) {

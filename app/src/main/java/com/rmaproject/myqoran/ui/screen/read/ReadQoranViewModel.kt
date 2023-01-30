@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import com.rmaproject.myqoran.BuildConfig
 import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
+import com.rmaproject.myqoran.data.local.entities.Bookmark
 import com.rmaproject.myqoran.data.local.entities.Qoran
 import com.rmaproject.myqoran.data.repository.QoranRepository
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_JUZ
@@ -118,6 +119,23 @@ class ReadQoranViewModel @Inject constructor(
                     playerClient.playMode = PlayMode.SINGLE_ONCE
                     _currentPlayedAyah.value = "${event.surahName}:${event.ayahNumber}"
                     playerType.value = PlayType.PLAY_SINGLE
+                }
+            }
+            is ReadQoranEvent.SaveBookmark -> {
+                viewModelScope.launch {
+                    repository.insertBookmark(
+                        Bookmark(
+                            id = null,
+                            surahName = event.surahName,
+                            ayahNumber = event.ayahNumber,
+                            surahNumber = event.surahNumber,
+                            juzNumber = event.juzNumber,
+                            pageNumber = event.pageNumber,
+                            positionScroll = event.position,
+                            textQoran = event.qoranTextAr,
+                            indexType = indexType,
+                        )
+                    )
                 }
             }
         }

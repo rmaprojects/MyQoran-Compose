@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.*
 import com.rmaproject.myqoran.R
-import com.rmaproject.myqoran.components.MyQoranAppBar
+import com.rmaproject.myqoran.components.MyQoranHomeAppBar
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.components.*
 import com.rmaproject.myqoran.ui.screen.home.states.JuzState
@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     navigateToReadQoran: (Int, Int?, Int?, Int?) -> Unit,
     navigateToSearch: () -> Unit,
+    navigateToBookmark: () -> Unit,
     openDrawer: () -> Unit,
     modifier: Modifier = Modifier,
     sharedViewModel: MyQoranSharedViewModel,
@@ -64,7 +65,7 @@ fun HomeScreen(
         modifier = modifier,
         scaffoldState = scaffoldState,
         topBar = {
-            MyQoranAppBar(
+            MyQoranHomeAppBar(
                 goToSearch = navigateToSearch,
                 openDrawer = openDrawer,
                 currentDestination = null
@@ -113,7 +114,7 @@ fun HomeScreen(
                 cardName = "Bookmark",
                 icon = Icons.Default.Bookmark,
                 cardDescription = stringResource(R.string.desc_bookmark_card),
-                onClick = { /*TODO*/ }
+                onClick = navigateToBookmark
             )
         }
     }

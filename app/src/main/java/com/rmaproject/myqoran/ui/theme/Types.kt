@@ -10,3 +10,8 @@ val ReadQoranTextStyle = TextStyle(
     fontSize = 35.sp,
     fontFamily = FontFamily(Font(R.font.usmani_font))
 )
+
+val BookmarkArabicStyle = TextStyle(
+    fontSize = 28.sp,
+    fontFamily = FontFamily(Font(R.font.usmani_font))
+)

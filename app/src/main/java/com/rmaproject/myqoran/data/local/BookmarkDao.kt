@@ -1,9 +1,6 @@
 package com.rmaproject.myqoran.data.local
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.rmaproject.myqoran.data.local.entities.Bookmark
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +9,7 @@ interface BookmarkDao {
     @Query("DELETE FROM bookmark")
     suspend fun deleteAllBookmark()
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookmark(bookmark: Bookmark)
 
     @Delete

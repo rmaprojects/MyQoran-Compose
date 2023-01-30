@@ -213,7 +213,20 @@ fun ReadQoranScreen(
                                                 )
                                             )
                                         },
-                                        onBookmarkAyahClick = { /*TODO*/ }
+                                        onBookmarkAyahClick = {
+                                            viewModel.onEvent(
+                                                ReadQoranEvent.SaveBookmark(
+                                                    surahName = qoran.surahNameEn!!,
+                                                    surahNumber = qoran.surahNumber,
+                                                    ayahNumber = qoran.ayahNumber!!,
+                                                    juzNumber = qoran.juzNumber,
+                                                    pageNumber = qoran.page,
+                                                    position = index,
+                                                    qoranTextAr = qoran.ayahText!!,
+                                                    indexType = viewModel.indexType
+                                                )
+                                            )
+                                        }
                                     )
                                     ItemReadAyah(
                                         ayahText = qoran.ayahText,

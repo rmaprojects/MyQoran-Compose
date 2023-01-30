@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rmaproject.myqoran.components.ActionItem
 import com.rmaproject.myqoran.components.MyQoranAlertDialog
-import com.rmaproject.myqoran.components.MyQoranAppBar
+import com.rmaproject.myqoran.components.MyQoranHomeAppBar
 import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
 import com.rmaproject.myqoran.ui.navigation.Screen
 import com.rmaproject.myqoran.ui.screen.settings.component.SettingsClickCard
@@ -37,10 +37,10 @@ fun SettingsScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            MyQoranAppBar(
-                goToSearch = {},
+            MyQoranHomeAppBar(
                 openDrawer = openDrawer,
-                currentDestination = Screen.Settings.route
+                currentDestination = Screen.Settings.route,
+                goToSearch = {}
             )
         }
     ) { innerPadding ->

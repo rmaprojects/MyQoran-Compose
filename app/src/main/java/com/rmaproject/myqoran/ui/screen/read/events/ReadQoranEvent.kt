@@ -18,13 +18,24 @@ sealed class ReadQoranEvent {
         val translation: String
     ) : ReadQoranEvent()
 
-    data class ChangePage(val newPage: Int) : ReadQoranEvent()
-    data class GetNewAyah(val ayahList: List<Qoran>) : ReadQoranEvent()
-    data class SetCurrentReading(val currentReading: String) : ReadQoranEvent()
-
     data class PlayAyah(
         val ayahNumber: Int,
         val surahNumber: Int,
         val surahName: String
-    ): ReadQoranEvent()
+    ) : ReadQoranEvent()
+
+    data class SaveBookmark(
+        val surahName: String,
+        val surahNumber: Int?,
+        val ayahNumber: Int,
+        val juzNumber: Int?,
+        val pageNumber: Int?,
+        val position: Int,
+        val qoranTextAr: String,
+        val indexType: Int
+    ) : ReadQoranEvent()
+
+    data class ChangePage(val newPage: Int) : ReadQoranEvent()
+    data class GetNewAyah(val ayahList: List<Qoran>) : ReadQoranEvent()
+    data class SetCurrentReading(val currentReading: String) : ReadQoranEvent()
 }
