@@ -21,6 +21,7 @@ fun PlayerControlPanelBottomBar(
     onPlayPauseClick: () -> Unit,
     onStopClick: () -> Unit,
     playType: ReadQoranViewModel.PlayType,
+    isPlayerPlaying: Boolean,
     modifier: Modifier = Modifier,
     currentPlaying: String = "",
     qori: String = SettingsPreferences.currentQoriName.qoriName,
@@ -54,25 +55,23 @@ fun PlayerControlPanelBottomBar(
                 }
                 IconButton(onClick = onPlayPauseClick) {
                     Icon(
-                        if (
-                            playType == ReadQoranViewModel.PlayType.PAUSED
-                        ) Icons.Default.PlayArrow
+                        if (!isPlayerPlaying) Icons.Default.PlayArrow
                         else Icons.Default.Pause,
-                        contentDescription = "Prev Ayah"
+                        contentDescription = "Play Pause Ayah"
                     )
                 }
                 if (playType == ReadQoranViewModel.PlayType.PLAY_ALL) {
                     IconButton(onClick = onSkipNextClick) {
                         Icon(
                             Icons.Default.SkipNext,
-                            contentDescription = "Prev Ayah"
+                            contentDescription = "Next Ayah"
                         )
                     }
                 }
                 IconButton(onClick = onStopClick) {
                     Icon(
                         Icons.Default.Stop,
-                        contentDescription = "Prev Ayah"
+                        contentDescription = "Stop Player"
                     )
                 }
             }

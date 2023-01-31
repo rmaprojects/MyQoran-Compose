@@ -18,8 +18,12 @@ import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_PAGE
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_SURAH
 import com.rmaproject.myqoran.ui.screen.read.events.PlayAyahEvent
 import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranEvent
+import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranUiEvent
 import com.rmaproject.myqoran.ui.screen.read.states.QoranAyahState
+import com.rmaproject.myqoran.utils.Converters
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import snow.player.PlayMode
@@ -39,6 +43,7 @@ class ReadQoranViewModel @Inject constructor(
     val pageNumber: Int = savedStateHandle["pageNumber"] ?: 1
     val juzNumber: Int = savedStateHandle["juzNumber"] ?: 1
     val indexType: Int = savedStateHandle["indexType"] ?: ORDER_BY_SURAH
+    val lastPosition: Int = savedStateHandle["scrollPosition"] ?: 0
 
     private val _currentPagingIndex = MutableLiveData(1)
 
@@ -71,9 +76,11 @@ class ReadQoranViewModel @Inject constructor(
     private val _currentPlayedAyah = mutableStateOf("")
     val currentPlayedAyah = _currentPlayedAyah
 
+    private val _uiEventFlow = MutableSharedFlow<ReadQoranUiEvent>()
+    val uiEventFlow = _uiEventFlow.asSharedFlow()
+
     val playerType = mutableStateOf(PlayType.NONE)
-
-
+    val isPlayerPlaying = mutableStateOf(playerClient.isPlaying)
 
     fun onEvent(event: ReadQoranEvent) {
         when (event) {
@@ -88,6 +95,7 @@ class ReadQoranViewModel @Inject constructor(
                     "${event.ayahText}\n\n${event.translation}"
                 )
                 clipboard.setPrimaryClip(clip)
+                viewModelScope.launch { _uiEventFlow.emit(ReadQoranUiEvent.SuccessCopiedAyah("Ayah Copied")) }
             }
             is ReadQoranEvent.GetNewAyah -> {
                 _qoranState.value = qoranState.value.copy(
@@ -104,18 +112,20 @@ class ReadQoranViewModel @Inject constructor(
                 shareIntent.putExtra(Intent.EXTRA_TEXT, event.ayahText)
                 shareIntent.putExtra(Intent.EXTRA_TEXT, event.translation)
                 event.context.startActivity(Intent.createChooser(shareIntent, "Share via"))
+                viewModelScope.launch { _uiEventFlow.emit(ReadQoranUiEvent.SuccessSharedAyah("Ayat dibagikan")) }
             }
             is ReadQoranEvent.PlayAyah -> {
                 playerClient.stop()
-                val formatSurahNumber = String.format("%03d", event.surahNumber)
-                val formatAyahNumber = String.format("%03d", event.ayahNumber)
-                val playList = createPlaylist(
+                val formatSurahNumber = Converters.convertNumberToThreeDigits(event.surahNumber)
+                val formatAyahNumber = Converters.convertNumberToThreeDigits(event.ayahNumber)
+                val playlist = Playlist.Builder()
+                val musicItem = createMusicItem(
                     title = "${event.surahName}:${event.ayahNumber}",
                     surahNumber = formatSurahNumber,
                     ayahNumber = formatAyahNumber
                 )
                 playerClient.connect {
-                    playerClient.setPlaylist(playList, true)
+                    playerClient.setPlaylist(playlist.append(musicItem).build(), true)
                     playerClient.playMode = PlayMode.SINGLE_ONCE
                     _currentPlayedAyah.value = "${event.surahName}:${event.ayahNumber}"
                     playerType.value = PlayType.PLAY_SINGLE
@@ -136,6 +146,32 @@ class ReadQoranViewModel @Inject constructor(
                             indexType = indexType,
                         )
                     )
+                    viewModelScope.launch {
+                        _uiEventFlow.emit(
+                            ReadQoranUiEvent.SuccessAddToBookmark("Berhasil menyimpan bookmark")
+                        )
+                    }
+                }
+            }
+            is ReadQoranEvent.PlayAllAyah -> {
+                playerClient.stop()
+                val musicItems = mutableListOf<MusicItem>()
+                val playlist = Playlist.Builder()
+                event.qoranList.forEach { qoran ->
+                    val formatSurahNumber = Converters.convertNumberToThreeDigits(qoran.surahNumber ?: return@forEach)
+                    val formatAyahNumber = Converters.convertNumberToThreeDigits(qoran.ayahNumber ?: return@forEach)
+                    val musicItem = createMusicItem(
+                        title = "${qoran.surahNameEn}: ${qoran.ayahNumber}",
+                        ayahNumber = formatAyahNumber,
+                        surahNumber = formatSurahNumber
+                    )
+                    musicItems.add(musicItem)
+                }
+                playerClient.connect {
+                    playerClient.setPlaylist(
+                        playlist.appendAll(musicItems).build(),
+                        true
+                    )
                 }
             }
         }
@@ -147,21 +183,22 @@ class ReadQoranViewModel @Inject constructor(
             is PlayAyahEvent.PlayPauseAyah -> playerClient.playPause()
             is PlayAyahEvent.SkipNext -> playerClient.skipToNext()
             is PlayAyahEvent.SkipPrevious -> playerClient.skipToPrevious()
-            is PlayAyahEvent.StopAyah -> { playerClient.stop(); playerType.value = PlayType.NONE; playerClient.shutdown() }
+            is PlayAyahEvent.StopAyah -> {
+                playerClient.stop(); playerType.value = PlayType.NONE; playerClient.shutdown()
+            }
         }
     }
 
-    private fun createPlaylist(title: String, ayahNumber: String, surahNumber: String): Playlist {
-        val musicItem = MusicItem.Builder()
+    private fun createMusicItem(
+        title: String, ayahNumber: String, surahNumber: String
+    ): MusicItem {
+        return MusicItem.Builder()
             .setMusicId("$ayahNumber$surahNumber")
             .autoDuration()
             .setTitle(title)
             .setIconUri(BuildConfig.NOTIFICATION_ICON_URL)
             .setUri("${BuildConfig.AUDIO_BASE_URL}/${SettingsPreferences.currentQoriName.url}/$surahNumber$ayahNumber.mp3")
             .setArtist(SettingsPreferences.currentQoriName.qoriName)
-            .build()
-        return Playlist.Builder()
-            .append(musicItem)
             .build()
     }
 
@@ -199,7 +236,6 @@ class ReadQoranViewModel @Inject constructor(
 
     enum class PlayType {
         NONE,
-        PAUSED,
         PLAY_ALL,
         PLAY_SINGLE
     }

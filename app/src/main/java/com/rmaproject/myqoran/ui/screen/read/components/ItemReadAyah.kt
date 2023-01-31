@@ -50,6 +50,7 @@ fun ItemSurahCard(
     surahNameAr: String,
     totalAyah: Int,
     descendPlace: String,
+    onPlayAllAyahClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -114,7 +115,7 @@ fun ItemSurahCard(
                         shape = ButtonDefaults.elevatedShape,
                         colors = ButtonDefaults.elevatedButtonColors(),
                         elevation = ButtonDefaults.elevatedButtonElevation(),
-                        onClick = {}
+                        onClick = onPlayAllAyahClick
                     ) {
                         Icon(Icons.Default.PlayCircle, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))

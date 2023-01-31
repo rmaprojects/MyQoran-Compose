@@ -24,6 +24,11 @@ sealed class ReadQoranEvent {
         val surahName: String
     ) : ReadQoranEvent()
 
+    data class PlayAllAyah(
+        val qoranList: List<Qoran>,
+        val surahName: String
+    ): ReadQoranEvent()
+
     data class SaveBookmark(
         val surahName: String,
         val surahNumber: Int?,

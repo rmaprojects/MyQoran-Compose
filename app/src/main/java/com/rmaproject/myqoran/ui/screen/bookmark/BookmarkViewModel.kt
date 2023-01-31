@@ -41,4 +41,10 @@ class BookmarkViewModel @Inject constructor(
             repository.deleteAllBookmark()
         }
     }
+
+    fun deleteBookmark(bookmark: Bookmark) {
+        viewModelScope.launch {
+            repository.deleteBookmark(bookmark)
+        }
+    }
 }

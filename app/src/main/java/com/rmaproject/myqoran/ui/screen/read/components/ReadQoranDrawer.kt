@@ -41,11 +41,11 @@ fun ReadQoranDrawer(
                     currentPage = currentPage
                 )
             }
-        }, drawerState = drawerState, content = {
+        }, drawerState = drawerState) {
             Column {
                 content()
             }
-        })
+        }
     }
 }
 
@@ -67,12 +67,14 @@ fun DrawerHeader(
                 .height(108.dp)
         ) {
             Text(
-                modifier = Modifier.align(Alignment.BottomCenter), text = when (currentIndex) {
+                modifier = Modifier.align(Alignment.BottomCenter),
+                text = when (currentIndex) {
                     ORDER_BY_SURAH -> "Pilih Surat"
                     ORDER_BY_JUZ -> "Pilih Juz"
                     ORDER_BY_PAGE -> "Pilih Halaman"
                     else -> throw Exception("Unknown Index")
-                }, style = MaterialTheme.typography.headlineSmall
+                },
+                style = MaterialTheme.typography.headlineSmall,
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
@@ -94,7 +96,12 @@ fun DrawerHeader(
                     )
                 ) {
                     Text(
-                        qoran.surahNameEn!!,
+                        text = when (currentIndex) {
+                            ORDER_BY_SURAH -> qoran.surahNameEn!!
+                            ORDER_BY_JUZ -> "Juz ${qoran.juzNumber}"
+                            ORDER_BY_PAGE -> "Halaman ${qoran.page}"
+                            else -> throw Exception("Unknown Order")
+                        },
                         textAlign = TextAlign.Center
                     )
                 }

@@ -4,7 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rmaproject.myqoran.components.MyQoranAppBar
 import com.rmaproject.myqoran.components.TopBarActionItem
@@ -55,16 +57,19 @@ fun BookmarkScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize(),
-                navigateToRead = navigateToRead
+                navigateToRead = navigateToRead,
+                deleteBookmark = { bookmark -> viewModel.deleteBookmark(bookmark) }
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BookmarkContent(
     state: BookmarkState<List<Bookmark>>,
     navigateToRead: (indexType: Int, surahNumber: Int?, juzNumber: Int?, pageNumber: Int?, scrollPosition: Int?) -> Unit,
+    deleteBookmark: (Bookmark) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -85,20 +90,41 @@ fun BookmarkContent(
             LazyColumn(
                 modifier.fillMaxSize()
             ) {
-                items(items = bookmarkList, key = { it.id!! }) { bookmark ->
-                    BookmarkCard(
-                        id = bookmark.id!!,
-                        surahName = bookmark.surahName!!,
-                        surahNumber = bookmark.surahNumber,
-                        juzNumber = bookmark.juzNumber,
-                        pageNumber = bookmark.pageNumber,
-                        ayahNumber = bookmark.ayahNumber!!,
-                        indexType = bookmark.indexType!!,
-                        position = bookmark.positionScroll!!,
-                        dateAdded = bookmark.timeAdded,
-                        textQoran = bookmark.textQoran!!,
-                        navigateToRead = navigateToRead
+                itemsIndexed(
+                    items = bookmarkList,
+                    key = { _, item -> item.id!! }
+                ) { index, bookmark ->
+                    val dismissState = rememberDismissState(
+                        confirmStateChange = {
+                            if (it == DismissValue.DismissedToStart) {
+                                deleteBookmark(bookmark)
+                            }
+                            true
+                        }
                     )
+
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = {
+                            MaterialTheme.colorScheme.background
+                        },
+                        directions = setOf(DismissDirection.EndToStart)
+                    ) {
+                        BookmarkCard(
+                            modifier = Modifier.padding(8.dp),
+                            id = bookmark.id!!,
+                            surahName = bookmark.surahName!!,
+                            surahNumber = bookmark.surahNumber,
+                            juzNumber = bookmark.juzNumber,
+                            pageNumber = bookmark.pageNumber,
+                            ayahNumber = bookmark.ayahNumber!!,
+                            indexType = bookmark.indexType!!,
+                            position = bookmark.positionScroll!!,
+                            dateAdded = bookmark.timeStamp,
+                            textQoran = bookmark.textQoran!!,
+                            navigateToRead = navigateToRead
+                        )
+                    }
                 }
             }
         }

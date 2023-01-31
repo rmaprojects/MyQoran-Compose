@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -29,6 +30,7 @@ import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_SURAH
 import com.rmaproject.myqoran.ui.screen.read.components.*
 import com.rmaproject.myqoran.ui.screen.read.events.PlayAyahEvent
 import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranEvent
+import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranUiEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -57,13 +59,17 @@ fun ReadQoranScreen(
     val totalAyahs = remember {
         sharedViewModel.getTotalAyah()
     }
+    val snackbarHostState = SnackbarHostState()
+    val lazyColumnState = rememberLazyListState()
 
     val qoranAyahList = viewModel.qoranState.value.listAyah
     val currentPlayingAyah = viewModel.currentPlayedAyah.value
     val playType = viewModel.playerType
+    val isPlayerPlaying = viewModel.isPlayerPlaying.value
 
     LaunchedEffect(Unit) {
         scope.launch {
+            delay(300)
             when (viewModel.indexType) {
                 ORDER_BY_SURAH -> {
                     pageTotal = SURAH_TOTAL + 1
@@ -76,9 +82,10 @@ fun ReadQoranScreen(
                 ORDER_BY_PAGE -> {
                     pageTotal = PAGE_TOTAL + 1
                     pagerState.scrollToPage(viewModel.pageNumber)
-
                 }
             }
+            delay(300)
+            lazyColumnState.scrollToItem(viewModel.lastPosition)
         }
     }
 
@@ -94,7 +101,7 @@ fun ReadQoranScreen(
 
     viewModel.observeAbleCurrentReading.observe(lifecycleOwner) { qoranList ->
         scope.launch {
-            delay(200)
+            delay(300)
             val currentReading =
                 when (viewModel.indexType) {
                     ORDER_BY_SURAH -> qoranList[pagerState.currentPage - 1].surahNameEn
@@ -112,6 +119,21 @@ fun ReadQoranScreen(
         }
     }
 
+    viewModel.uiEventFlow.collectAsState(initial = ReadQoranUiEvent.Idle).let { state ->
+        when (val event = state.value) {
+            is ReadQoranUiEvent.Idle -> {}
+            is ReadQoranUiEvent.SuccessAddToBookmark -> {
+                scope.launch { snackbarHostState.showSnackbar(event.message) }
+            }
+            is ReadQoranUiEvent.SuccessCopiedAyah -> {
+                scope.launch { snackbarHostState.showSnackbar(event.message) }
+            }
+            is ReadQoranUiEvent.SuccessSharedAyah -> {
+                scope.launch { snackbarHostState.showSnackbar(event.message) }
+            }
+        }
+    }
+
     ReadQoranDrawer(
         modifier = modifier,
         drawerState = drawerState,
@@ -119,7 +141,11 @@ fun ReadQoranScreen(
         indexList = viewModel.indexList,
         currentPage = pagerState.currentPage,
         onIndexClick = { page ->
-            scope.launch { pagerState.scrollToPage(page); drawerState.close() }
+            scope.launch {
+                pagerState.scrollToPage(page); drawerState.close(); lazyColumnState.scrollToItem(
+                0
+            )
+            }
         }
     ) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -150,12 +176,16 @@ fun ReadQoranScreen(
                             PlayerControlPanelBottomBar(
                                 currentPlaying = currentPlayingAyah,
                                 playType = playType.value,
+                                isPlayerPlaying = isPlayerPlaying,
                                 onSkipNextClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipNext) },
                                 onPlayPauseClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.PlayPauseAyah) },
                                 onSkipPrevClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipPrevious) },
                                 onStopClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.StopAyah) }
                             )
                         }
+                    },
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackbarHostState)
                     }
                 ) { innerPadding ->
                     Column(
@@ -167,7 +197,8 @@ fun ReadQoranScreen(
                             userScrollEnabled = false
                         ) {
                             LazyColumn(
-                                contentPadding = PaddingValues(12.dp)
+                                contentPadding = PaddingValues(12.dp),
+                                state = lazyColumnState
                             ) {
                                 items(
                                     qoranAyahList.size
@@ -179,7 +210,15 @@ fun ReadQoranScreen(
                                             surahName = qoran.surahNameEn!!,
                                             surahNameAr = qoran.surahNameAr!!,
                                             totalAyah = totalAyahs?.get(index)!!,
-                                            descendPlace = qoran.surahDescendPlace!!
+                                            descendPlace = qoran.surahDescendPlace!!,
+                                            onPlayAllAyahClick = {
+                                                viewModel.onEvent(
+                                                    ReadQoranEvent.PlayAllAyah(
+                                                        qoranAyahList,
+                                                        qoran.surahNameEn
+                                                    )
+                                                )
+                                            }
                                         )
                                     }
                                     ReadControlPanel(

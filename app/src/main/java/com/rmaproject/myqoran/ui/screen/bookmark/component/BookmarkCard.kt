@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rmaproject.myqoran.ui.theme.BookmarkArabicStyle
-import com.rmaproject.myqoran.utils.DateConverter
+import com.rmaproject.myqoran.utils.Converters
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,7 +105,7 @@ fun BookmarkCard(
                 ) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
-                        text = "Date Added:\n${DateConverter.convertMillisToActualDate(dateAdded)}",
+                        text = "Date Added:\n${Converters.convertMillisToActualDate(dateAdded)}",
                         style = MaterialTheme.typography.titleSmall
                     )
                 }
