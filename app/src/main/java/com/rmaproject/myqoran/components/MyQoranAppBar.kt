@@ -14,8 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 fun MyQoranAppBar(
     currentDestinationTitle: String,
     navigateUp: () -> Unit,
-    actions: List<TopBarActionItem>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    actions: List<TopBarActionItem> = emptyList(),
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -26,11 +26,12 @@ fun MyQoranAppBar(
             }
         },
         actions = {
-            actions.map { item ->
-                IconButton(onClick = item.onClick) {
-                    Icon(item.icon, contentDescription = item.text)
+            if (actions.isNotEmpty())
+                actions.map { item ->
+                    IconButton(onClick = item.onClick) {
+                        Icon(item.icon, contentDescription = item.text)
+                    }
                 }
-            }
         }
     )
 }
@@ -48,7 +49,7 @@ fun MyQoranAppBarPreview() {
     MyQoranAppBar(
         currentDestinationTitle = "",
         {},
-        list
+        actions = list
     )
 }
 

@@ -6,7 +6,7 @@ import com.rmaproject.myqoran.data.local.entities.*
 
 @Database(
     entities = [Qoran::class],
-    views = [Surah::class, Juz::class, Page::class],
+    views = [Surah::class, Juz::class, Page::class, SearchSurahResult::class],
     version = 1,
     exportSchema = false
 )

@@ -1,9 +1,6 @@
 package com.rmaproject.myqoran.ui.screen.read.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -44,6 +41,7 @@ fun PlayerControlPanelBottomBar(
                     fontWeight = FontWeight.SemiBold
                 )
             )
+            Spacer(modifier = Modifier.height(8.dp))
             Row {
                 if (playType == ReadQoranViewModel.PlayType.PLAY_ALL) {
                     IconButton(onClick = onSkipPrevClick) {

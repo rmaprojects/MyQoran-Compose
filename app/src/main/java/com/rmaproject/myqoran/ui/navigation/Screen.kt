@@ -21,6 +21,8 @@ sealed class Screen(val route: String) {
     object FindQibla: Screen("FindQibla")
     object AdzanSchedule: Screen("AdzanSchedule")
     object Bookmarks: Screen("Bookmarks")
+    object SearchSurah: Screen("SearchSurah")
+    object SearchAyah: Screen("SearchAyah")
 }
 
 class MyQoranNavigationActions(navController: NavController) {

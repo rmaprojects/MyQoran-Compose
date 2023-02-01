@@ -118,16 +118,16 @@ class ReadQoranViewModel @Inject constructor(
                 playerClient.stop()
                 val formatSurahNumber = Converters.convertNumberToThreeDigits(event.surahNumber)
                 val formatAyahNumber = Converters.convertNumberToThreeDigits(event.ayahNumber)
-                val playlist = Playlist.Builder()
                 val musicItem = createMusicItem(
-                    title = "${event.surahName}:${event.ayahNumber}",
+                    title = "${event.surahName}: ${event.ayahNumber}",
                     surahNumber = formatSurahNumber,
                     ayahNumber = formatAyahNumber
                 )
+                val playlist = Playlist.Builder().append(musicItem).build()
                 playerClient.connect {
-                    playerClient.setPlaylist(playlist.append(musicItem).build(), true)
+                    playerClient.setPlaylist(playlist, true)
                     playerClient.playMode = PlayMode.SINGLE_ONCE
-                    _currentPlayedAyah.value = "${event.surahName}:${event.ayahNumber}"
+                    _currentPlayedAyah.value = "${event.surahName}: ${event.ayahNumber}"
                     playerType.value = PlayType.PLAY_SINGLE
                 }
             }
@@ -156,7 +156,6 @@ class ReadQoranViewModel @Inject constructor(
             is ReadQoranEvent.PlayAllAyah -> {
                 playerClient.stop()
                 val musicItems = mutableListOf<MusicItem>()
-                val playlist = Playlist.Builder()
                 event.qoranList.forEach { qoran ->
                     val formatSurahNumber = Converters.convertNumberToThreeDigits(qoran.surahNumber ?: return@forEach)
                     val formatAyahNumber = Converters.convertNumberToThreeDigits(qoran.ayahNumber ?: return@forEach)
@@ -167,11 +166,16 @@ class ReadQoranViewModel @Inject constructor(
                     )
                     musicItems.add(musicItem)
                 }
+                val playlist = Playlist.Builder().appendAll(musicItems).build()
                 playerClient.connect {
-                    playerClient.setPlaylist(
-                        playlist.appendAll(musicItems).build(),
-                        true
-                    )
+                    playerClient.setPlaylist(playlist, true)
+                    playerClient.playMode = PlayMode.PLAYLIST_LOOP
+                    playerType.value = PlayType.PLAY_ALL
+                    playerClient.addOnPlaylistChangeListener { _, position ->
+                        val surahName = event.qoranList[position].surahNameEn
+                        val ayahNumber = event.qoranList[position].ayahNumber
+                        _currentPlayedAyah.value = "${surahName}:${ayahNumber}"
+                    }
                 }
             }
         }

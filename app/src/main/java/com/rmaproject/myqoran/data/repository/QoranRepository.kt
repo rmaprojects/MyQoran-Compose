@@ -50,6 +50,14 @@ class QoranRepository @Inject constructor(
         return qoranDatabase.qoranDao().getPageList()
     }
 
+    fun searchSurah(query: String): Flow<List<SearchSurahResult>> {
+        return qoranDatabase.qoranDao().searchSurah(query)
+    }
+
+    fun searchAyah(query: String): Flow<List<Qoran>> {
+        return qoranDatabase.qoranDao().searchEntireQuran(query)
+    }
+
     fun getBookmarks(): Flow<List<Bookmark>> {
         return bookmarkDatabase.bookmarkDao().getBookmarks()
     }

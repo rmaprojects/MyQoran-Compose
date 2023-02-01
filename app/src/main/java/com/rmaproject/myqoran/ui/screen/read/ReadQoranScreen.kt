@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,6 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ReadQoranScreen(
     navigateUp: () -> Unit,
+    navigateToSearchAyah: () -> Unit,
     sharedViewModel: MyQoranSharedViewModel,
     modifier: Modifier = Modifier,
     viewModel: ReadQoranViewModel = hiltViewModel()
@@ -101,7 +101,7 @@ fun ReadQoranScreen(
 
     viewModel.observeAbleCurrentReading.observe(lifecycleOwner) { qoranList ->
         scope.launch {
-            delay(300)
+            delay(500)
             val currentReading =
                 when (viewModel.indexType) {
                     ORDER_BY_SURAH -> qoranList[pagerState.currentPage - 1].surahNameEn
@@ -146,7 +146,8 @@ fun ReadQoranScreen(
                 0
             )
             }
-        }
+        },
+        navigateToSearchAyah = navigateToSearchAyah
     ) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             ModalBottomSheetLayout(
@@ -284,9 +285,3 @@ fun ReadQoranScreen(
 private const val SURAH_TOTAL = 114
 private const val PAGE_TOTAL = 604
 private const val JUZ_TOTAL = 30
-
-@Preview
-@Composable
-fun ReadQoranScreenPreview() {
-    ReadQoranScreen({}, MyQoranSharedViewModel())
-}

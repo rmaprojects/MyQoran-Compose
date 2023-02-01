@@ -1,4 +1,4 @@
-package com.rmaproject.myqoran.ui.screen.adzan
+package com.rmaproject.myqoran.ui.screen.adzanschedule
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

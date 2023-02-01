@@ -21,11 +21,13 @@ import com.rmaproject.myqoran.components.MyQoranDrawer
 import com.rmaproject.myqoran.ui.navigation.MyQoranNavigationActions
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.navigation.Screen
-import com.rmaproject.myqoran.ui.screen.adzan.AdzanScheduleScreen
+import com.rmaproject.myqoran.ui.screen.adzanschedule.AdzanScheduleScreen
 import com.rmaproject.myqoran.ui.screen.bookmark.BookmarkScreen
 import com.rmaproject.myqoran.ui.screen.findqibla.FindQiblaScreen
 import com.rmaproject.myqoran.ui.screen.home.HomeScreen
 import com.rmaproject.myqoran.ui.screen.read.ReadQoranScreen
+import com.rmaproject.myqoran.ui.screen.search.SearchAyahScreen
+import com.rmaproject.myqoran.ui.screen.search.SearchSurahScreen
 import com.rmaproject.myqoran.ui.screen.settings.SettingsScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -67,6 +69,23 @@ fun MyQoranApp(
             composable(Screen.FindQibla.route) {
                 FindQiblaScreen()
             }
+            composable(Screen.SearchAyah.route) {
+                SearchAyahScreen(
+                    navigateUp = { navController.navigateUp() }
+                )
+            }
+            composable(Screen.SearchSurah.route) {
+                SearchSurahScreen(
+                    navigateUp = { navController.navigateUp() },
+                    navigateToReadQoran = { indexType, surahNumber, juzNumber, pageNumber ->
+                        navController.navigate(
+                            Screen.ReadQoran.createRoute(
+                                indexType, surahNumber, juzNumber, pageNumber, null
+                            )
+                        )
+                    },
+                )
+            }
             composable(Screen.Bookmarks.route) {
                 BookmarkScreen(navigateUp = { navController.navigateUp() },
                     navigateToRead = { indexType: Int, surahNumber: Int?, juzNumber: Int?, pageNumber: Int?, scrollPosition: Int? ->
@@ -95,7 +114,8 @@ fun MyQoranApp(
             })) {
                 ReadQoranScreen(
                     navigateUp = { navController.navigateUp() },
-                    sharedViewModel = totalAyahSharedViewModel
+                    navigateToSearchAyah = { navController.navigate(Screen.SearchAyah.route) },
+                    sharedViewModel = totalAyahSharedViewModel,
                 )
             }
             composable(Screen.Home.route) {
@@ -107,7 +127,7 @@ fun MyQoranApp(
                             )
                         )
                     },
-                    navigateToSearch = {},
+                    navigateToSearch = { navController.navigate(Screen.SearchSurah.route) },
                     navigateToBookmark = { navController.navigate(Screen.Bookmarks.route) },
                     openDrawer = { scope.launch { drawerState.open() } },
                     sharedViewModel = totalAyahSharedViewModel

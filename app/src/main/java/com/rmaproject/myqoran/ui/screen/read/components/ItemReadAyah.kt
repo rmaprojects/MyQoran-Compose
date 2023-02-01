@@ -13,13 +13,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rmaproject.myqoran.R
+import com.rmaproject.myqoran.ui.screen.settings.translation
 import com.rmaproject.myqoran.ui.theme.ReadQoranTextStyle
 
 @Composable
 fun ItemReadAyah(
     ayahText: String?,
     ayahTranslate: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isRead: Boolean = true
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -34,12 +36,23 @@ fun ItemReadAyah(
                 style = ReadQoranTextStyle
             )
             Spacer(Modifier.height(32.dp))
-            SpannableText(
-                text = ayahTranslate ?: "",
-                onClick = {
-                    Log.d("CLICK", it)
-                },
-            )
+            if (isRead) {
+                SpannableText(
+                    text = ayahTranslate ?: "",
+                    onClick = {
+                        Log.d("CLICK", it)
+                    },
+                )
+            }
+            if (!isRead) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = ayahTranslate ?: "",
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         }
     }
 }
