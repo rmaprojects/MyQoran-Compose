@@ -21,7 +21,7 @@ fun PlayerControlPanelBottomBar(
     isPlayerPlaying: Boolean,
     modifier: Modifier = Modifier,
     currentPlaying: String = "",
-    qori: String = SettingsPreferences.currentQoriName.qoriName,
+    qori: String = SettingsPreferences.currentQoriOption.qoriName,
 ) {
     BottomAppBar(
         modifier = modifier.height(128.dp),

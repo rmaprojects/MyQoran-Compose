@@ -201,8 +201,8 @@ class ReadQoranViewModel @Inject constructor(
             .autoDuration()
             .setTitle(title)
             .setIconUri(BuildConfig.NOTIFICATION_ICON_URL)
-            .setUri("${BuildConfig.AUDIO_BASE_URL}/${SettingsPreferences.currentQoriName.url}/$surahNumber$ayahNumber.mp3")
-            .setArtist(SettingsPreferences.currentQoriName.qoriName)
+            .setUri("${BuildConfig.AUDIO_BASE_URL}/${SettingsPreferences.currentQoriOption.url}/$surahNumber$ayahNumber.mp3")
+            .setArtist(SettingsPreferences.currentQoriOption.qoriName)
             .build()
     }
 

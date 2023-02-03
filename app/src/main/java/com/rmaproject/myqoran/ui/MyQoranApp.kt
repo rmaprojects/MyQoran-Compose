@@ -18,6 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.rmaproject.myqoran.components.MyQoranDrawer
+import com.rmaproject.myqoran.data.kotpref.LastReadPreferences
 import com.rmaproject.myqoran.ui.navigation.MyQoranNavigationActions
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.navigation.Screen
@@ -25,6 +26,9 @@ import com.rmaproject.myqoran.ui.screen.adzanschedule.AdzanScheduleScreen
 import com.rmaproject.myqoran.ui.screen.bookmark.BookmarkScreen
 import com.rmaproject.myqoran.ui.screen.findqibla.FindQiblaScreen
 import com.rmaproject.myqoran.ui.screen.home.HomeScreen
+import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_JUZ
+import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_PAGE
+import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_SURAH
 import com.rmaproject.myqoran.ui.screen.read.ReadQoranScreen
 import com.rmaproject.myqoran.ui.screen.search.SearchAyahScreen
 import com.rmaproject.myqoran.ui.screen.search.SearchSurahScreen
@@ -123,7 +127,22 @@ fun MyQoranApp(
                     navigateToReadQoran = { indexType, surahNumber, juzNumber, pageNumber ->
                         navController.navigate(
                             Screen.ReadQoran.createRoute(
-                                indexType, surahNumber, juzNumber, pageNumber, null
+                                indexType = indexType,
+                                surahNumber = surahNumber,
+                                juzNumber = juzNumber,
+                                pageNumber = pageNumber,
+                                scrollPosition = null,
+                            )
+                        )
+                    },
+                    navigateLastRead = {
+                        navController.navigate(
+                            Screen.ReadQoran.createRoute(
+                                indexType = LastReadPreferences.indexType,
+                                surahNumber = if (LastReadPreferences.indexType == ORDER_BY_SURAH) LastReadPreferences.surahNumber else null,
+                                juzNumber = if (LastReadPreferences.indexType == ORDER_BY_JUZ) LastReadPreferences.juzNumber else null,
+                                pageNumber = if (LastReadPreferences.indexType == ORDER_BY_PAGE) LastReadPreferences.pageNumber else null,
+                                scrollPosition = LastReadPreferences.lastPosition
                             )
                         )
                     },

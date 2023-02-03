@@ -22,6 +22,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rmaproject.myqoran.R
+import com.rmaproject.myqoran.data.kotpref.LastReadPreferences
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_JUZ
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_PAGE
@@ -272,6 +273,15 @@ fun ReadQoranScreen(
                                         ayahText = qoran.ayahText,
                                         ayahTranslate = qoran.translation_id
                                     )
+                                    with(LastReadPreferences) {
+                                        surahName = qoran.surahNameEn!!
+                                        surahNumber = qoran.surahNumber ?: 0
+                                        ayahNumber = qoran.ayahNumber ?: 0
+                                        juzNumber = qoran.juzNumber ?: 0
+                                        pageNumber = qoran.page?: 0
+                                        indexType = viewModel.indexType
+                                        lastPosition = index
+                                    }
                                 }
                             }
                         }

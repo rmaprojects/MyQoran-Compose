@@ -8,13 +8,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.rmaproject.myqoran.R
-import com.rmaproject.myqoran.ui.screen.settings.translation
-import com.rmaproject.myqoran.ui.theme.ReadQoranTextStyle
+import com.rmaproject.myqoran.utils.GlobalState
 
 @Composable
 fun ItemReadAyah(
@@ -33,7 +34,10 @@ fun ItemReadAyah(
                     .fillMaxWidth(),
                 text = ayahText ?: "",
                 textAlign = TextAlign.End,
-                style = ReadQoranTextStyle
+                style = TextStyle(
+                    fontSize = GlobalState.ayahTextSize.sp,
+                    fontFamily = FontFamily(Font(R.font.usmani_font))
+                )
             )
             Spacer(Modifier.height(32.dp))
             if (isRead) {

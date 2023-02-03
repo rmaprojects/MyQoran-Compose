@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.*
 import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.MyQoranHomeAppBar
+import com.rmaproject.myqoran.data.kotpref.LastReadPreferences
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.components.*
 import com.rmaproject.myqoran.ui.screen.home.states.JuzState
@@ -34,6 +35,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navigateToReadQoran: (Int, Int?, Int?, Int?) -> Unit,
+    navigateLastRead: () -> Unit,
     navigateToSearch: () -> Unit,
     navigateToBookmark: () -> Unit,
     openDrawer: () -> Unit,
@@ -104,8 +106,10 @@ fun HomeScreen(
                     .padding(4.dp),
                 cardName = "Last Read",
                 icon = Icons.Default.History,
-                cardDescription = stringResource(R.string.desc_last_read),
-                onClick = { /*TODO*/ }
+                cardDescription =
+                if (LastReadPreferences.surahName == null) "Kamu perlu membaca dulu"
+                else "Lanjutkan membaca:\n${LastReadPreferences.surahName}: ${LastReadPreferences.ayahNumber}",
+                onClick = navigateLastRead
             )
             HeaderCard(
                 modifier = Modifier
