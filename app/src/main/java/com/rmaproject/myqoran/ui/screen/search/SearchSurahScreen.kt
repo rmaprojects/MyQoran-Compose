@@ -56,6 +56,7 @@ fun SearchSurahScreen(
                 .padding(innerPadding)
         ) {
             SearchField(
+                searchFor = stringResource(id = R.string.txt_search_surah),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),

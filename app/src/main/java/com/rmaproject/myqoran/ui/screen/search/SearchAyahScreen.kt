@@ -60,6 +60,7 @@ fun SearchAyahScreen(
                 .fillMaxSize()
         ) {
             SearchField(
+                searchFor = stringResource(id = R.string.txt_search_ayah),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),

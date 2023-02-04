@@ -28,7 +28,9 @@
     <string name="txt_desc_focus_read">Hide translation and menu for better reading</string>
     <string name="txt_focus_read">Focus Read Mode</string>
     <string name="txt_select_page">Select Page</string>
-    <string name="txt_many_ayah">%1$s Ayat</string>
+    <string name="txt_many_ayah">%1$s Ayah</string>
     <string name="txt_select_surah">Select Surah</string>
     <string name="txt_select_juz">Select Juz</string>
+    <string name="txt_question_delete_all_bookmark">Delete all bookmarks?</string>
+    <string name="txt_warn_cannot_undo">This action cannot be undone</string>
 </resources>

@@ -9,14 +9,7 @@ import com.rmaproject.myqoran.R
 import java.util.regex.Pattern
 
 object TajweedHelper {
-    val quranmatcher = Pattern.compile("[01]?\\d?\\d:\\d?\\d?\\d").matcher("") //withtout brackets
 
-    //vowels
-    const val fathah = '\u064e'
-    const val dhamma = '\u064f'
-    const val kasra = '\u0650'
-    const val ya_hamza = '\u0626'
-    const val joining_hamza = '\u0654'
     private const val kasratain = '\u064d'
     private const val fathatain = '\u064b'
     private const val dammatain = '\u064c'
@@ -50,17 +43,14 @@ object TajweedHelper {
     //stop signs uthmani
     private const val stop_sign_zim = '\u06da'
     private const val stop_sign_lam = '\u06d9'
-    const val stop_sign_high_seen = '\u06dc'
     private const val stop_sign_mim = '\u06d8'
     private const val stop_sign_three_dots = '\u06db'
     private const val stop_sign_qaf_lam = '\u06d7'
     private const val stop_sign_soad_lam = '\u06d6'
-    const val low_seen = '\u06e3'
 
     //sukuns
     private const val sukun = '\u0652'
     private const val curvy_sukun = '\u06e1'
-    const val small_rounded_zero = '\u06df'
 
     //others
     private const val low_meem = '\u06ed'
@@ -71,19 +61,8 @@ object TajweedHelper {
     private const val another_ya = '\u064a'
     private const val ta_marbuta = '\u0647'
     private const val supercript_alif_khara_fatha = '\u0670'
-    const val small_waw_elongation = "\u06E5"
-    const val small_ya_elongation = "\u06E6"
-    const val tatweel_empty_letter = "\u0640"
-    const val high_small_ya = "\u06E7"
     private const val uthmani_stop_signs =
         "" + stop_sign_three_dots + stop_sign_zim + stop_sign_qaf_lam + stop_sign_soad_lam + stop_sign_lam + stop_sign_mim
-    private val hadithmatcher =
-        Pattern.compile("(bukhari|Bukhari|Muslim|dawud|tirmizi)..\\d?\\d\\/\\d\\d?\\d?\\d?")
-            .matcher("")
-    private const val HADITHINTENT = "app_hadith.intent.action.HADITH"
-    private const val CURSOR_VIEWTYPE = "cursortype"
-    private const val QUERY = "query"
-    private const val FETCHSEARCH_HADITH = 3
     private val gunnahmatcher = Pattern.compile("[$nun|$mim]$shadda").matcher("")
     private val iqlabmmatcher =
         Pattern.compile("[$high_meem$low_meem][$sukun$curvy_sukun$empty_ya$empty_alif]?[$uthmani_stop_signs]?$space?$ba")
@@ -100,23 +79,7 @@ object TajweedHelper {
     private val ikhfamatcher =
         Pattern.compile("([$nun$kasratain$fathatain$dammatain][$sukun$curvy_sukun$empty_ya$empty_alif]?[$uthmani_stop_signs]?$space?[$soad$zaal$tha$kaf$zim$shin$qaf$seen$dal$toa$zha$fa$ta$doad$zoa$indopak_kaf])|$mim[$sukun$curvy_sukun]?$space?$ba")
             .matcher("")
-    private val hamzawaslmatcher = Pattern.compile("[$nun|$mim]$shadda").matcher("")
-    private val lastelongationmatcher =
-        Pattern.compile("[$nun|$mim]$").matcher("")
-    private val onemaadmatcher = Pattern.compile("[$nun|$mim]$shadda").matcher("")
-    private val threemaadmatcher = Pattern.compile("[$nun|$mim]$shadda").matcher("")
 
-    private val thicklettermatcher =
-        Pattern.compile("[$nun|$mim]$shadda").matcher("")
-
-    private const val ZERO_WIDTH_NO_BR_SPACE = "\uFEFF" // doesn't separate
-    private const val WORD_JOINER = "\u2060" // doesn't separate
-    private const val NO_BREAK_SPACE = "\u00A0" // doesn't separate
-    private const val FIGURE_SPACE = "\u2007" // too big space
-    private const val ZERO_WIDTH_JOINER = "\u200d" // too big space
-    private const val THIN_SPACE = "\u2009" // currently most appropriate
-    private val arabicmatcher =
-        Pattern.compile("[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FF]+").matcher("")
     private var colors: IntArray? = null
 
     fun getTajweed(context: Context?, s: String): Spannable {

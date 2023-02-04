@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SearchField(
+    searchFor: String,
     query: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -58,7 +59,7 @@ fun SearchField(
                 )
                 if (displayHint)
                     Text(
-                        text = "Search note...",
+                        text = searchFor,
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.DarkGray
                     )
@@ -71,5 +72,5 @@ fun SearchField(
 @Preview
 @Composable
 fun SearchFieldPreview() {
-    SearchField("Mamang", {}, displayHint = false, onFocusState = {})
+    SearchField("Surat","Mamang", {}, displayHint = false, onFocusState = {})
 }

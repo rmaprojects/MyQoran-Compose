@@ -7,7 +7,6 @@ import com.rmaproject.myqoran.data.remote.model.AdzanScheduleResponse
 import com.rmaproject.myqoran.data.remote.service.ApiInterface
 import com.rmaproject.myqoran.utils.Queries
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
 import javax.inject.Inject
 
 class QoranRepository @Inject constructor(

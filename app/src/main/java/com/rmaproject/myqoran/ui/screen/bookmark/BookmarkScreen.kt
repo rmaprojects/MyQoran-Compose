@@ -8,24 +8,26 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rmaproject.myqoran.R
+import com.rmaproject.myqoran.components.MyQoranAlertDialog
 import com.rmaproject.myqoran.components.MyQoranAppBar
 import com.rmaproject.myqoran.components.TopBarActionItem
 import com.rmaproject.myqoran.data.local.entities.Bookmark
 import com.rmaproject.myqoran.ui.screen.bookmark.component.BookmarkCard
 import com.rmaproject.myqoran.ui.screen.bookmark.state.BookmarkState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,21 +40,45 @@ fun BookmarkScreen(
     viewModel: BookmarkViewModel = hiltViewModel(),
 ) {
 
+    var isDialogShown by remember {
+        mutableStateOf(false)
+    }
+
+    val snackbarHostState = SnackbarHostState()
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
     val actionList = listOf(
         TopBarActionItem(
             text = stringResource(R.string.txt_delete_all_bookmark),
             icon = Icons.Default.DeleteForever,
-            onClick = { viewModel.deleteAllBookmarks() }
+            onClick = {
+                if (viewModel.bookmarkSize.value == 0) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.txt_no_bookmark)
+                        )
+                    }
+                    return@TopBarActionItem
+                }
+                isDialogShown = true
+            }
         )
     )
 
-    Scaffold(modifier = modifier, topBar = {
-        MyQoranAppBar(
-            currentDestinationTitle = "Bookmark",
-            navigateUp = navigateUp,
-            actions = actionList,
-        )
-    }) { innerPadding ->
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            MyQoranAppBar(
+                currentDestinationTitle = "Bookmark",
+                navigateUp = navigateUp,
+                actions = actionList,
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) { innerPadding ->
         viewModel.bookmarkState.collectAsState(initial = BookmarkState.Empty).let { state ->
             val result = state.value
             BookmarkContent(
@@ -62,6 +88,18 @@ fun BookmarkScreen(
                     .fillMaxSize(),
                 navigateToRead = navigateToRead,
                 deleteBookmark = { bookmark -> viewModel.deleteBookmark(bookmark) }
+            )
+        }
+
+        if (isDialogShown) {
+            MyQoranAlertDialog(
+                icon = Icons.Default.DeleteForever,
+                title = stringResource(R.string.txt_question_delete_all_bookmark),
+                description = stringResource(R.string.txt_warn_cannot_undo),
+                confirmButtonText = "Ok",
+                dismissButtonText = stringResource(id = R.string.txt_cancel),
+                onDismissClick = { isDialogShown = false },
+                onConfirmClick = { viewModel.deleteAllBookmarks(); isDialogShown = false }
             )
         }
     }

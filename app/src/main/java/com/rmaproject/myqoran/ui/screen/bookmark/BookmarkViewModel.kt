@@ -1,5 +1,6 @@
 package com.rmaproject.myqoran.ui.screen.bookmark
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rmaproject.myqoran.data.local.entities.Bookmark
@@ -20,8 +21,10 @@ class BookmarkViewModel @Inject constructor(
     private val _bookmarkState: MutableStateFlow<BookmarkState<List<Bookmark>>> = MutableStateFlow(
         BookmarkState.Empty
     )
-
     val bookmarkState: StateFlow<BookmarkState<List<Bookmark>>> = _bookmarkState.asStateFlow()
+    private val _bookmarkSize = MutableStateFlow(0)
+    val bookmarkSize = _bookmarkSize.asStateFlow()
+
 
     init {
         getAllBookmarks()
@@ -30,6 +33,7 @@ class BookmarkViewModel @Inject constructor(
     private fun getAllBookmarks() {
         viewModelScope.launch {
             repository.getBookmarks().collect { bookmarkList ->
+                _bookmarkSize.value = bookmarkList.size
                 if (bookmarkList.isEmpty()) _bookmarkState.emit(BookmarkState.Empty)
                 else _bookmarkState.emit(BookmarkState.NotEmpty(bookmarkList))
             }

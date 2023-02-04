@@ -5,8 +5,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import com.rmaproject.myqoran.R
-import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
-import com.rmaproject.myqoran.utils.GlobalState
 
 val BookmarkArabicStyle = TextStyle(
     fontSize = 28.sp,
