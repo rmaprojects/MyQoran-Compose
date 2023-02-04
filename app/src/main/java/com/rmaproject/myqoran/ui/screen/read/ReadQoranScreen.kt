@@ -1,16 +1,22 @@
 package com.rmaproject.myqoran.ui.screen.read
 
+import android.util.Log
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.LayoutDirection
@@ -49,6 +55,7 @@ fun ReadQoranScreen(
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
+    val density = LocalDensity.current
 
     val pagerState = rememberPagerState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -60,11 +67,18 @@ fun ReadQoranScreen(
     }
     val snackbarHostState = SnackbarHostState()
     val lazyColumnState = rememberLazyListState()
+    val fabVisibility by remember {
+        derivedStateOf {
+            lazyColumnState.isScrollInProgress
+        }
+    }
 
     val qoranAyahList = viewModel.qoranState.value.listAyah
     val playType = viewModel.playerType
-    val isPlayerPlaying = viewModel.isPlayerPlaying.value
+    val isPlayerPlaying = viewModel.isPlayerPlaying.collectAsState()
     val footNotesState = remember { mutableStateOf("") }
+
+    Log.d("ISPLAYING", isPlayerPlaying.value.toString())
 
     LaunchedEffect(Unit) {
         scope.launch {
@@ -142,12 +156,12 @@ fun ReadQoranScreen(
         indexType = viewModel.indexType,
         indexList = viewModel.indexList,
         currentPage = pagerState.currentPage,
+        navigateToSearchAyah = navigateToSearchAyah,
         onIndexClick = { page ->
             scope.launch {
                 pagerState.scrollToPage(page); drawerState.close(); lazyColumnState.scrollToItem(0)
             }
-        },
-        navigateToSearchAyah = navigateToSearchAyah
+        }
     ) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             ModalBottomSheetLayout(
@@ -178,7 +192,7 @@ fun ReadQoranScreen(
                                 PlayerControlPanelBottomBar(
                                     currentPlaying = it.value,
                                     playType = playType.value,
-                                    isPlayerPlaying = isPlayerPlaying,
+                                    isPlayerPlaying = isPlayerPlaying.value,
                                     onSkipNextClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipNext) },
                                     onPlayPauseClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.PlayPauseAyah) },
                                     onSkipPrevClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipPrevious) },
@@ -187,6 +201,48 @@ fun ReadQoranScreen(
                             }
                         }
                     },
+                    floatingActionButton = {
+                        AnimatedVisibility(
+                            visible = !fabVisibility,
+                            enter = slideInVertically {
+                                with(density) { 40.dp.roundToPx() }
+                            } + fadeIn(),
+                            exit = slideOutVertically {
+                                with(density) { 40.dp.roundToPx() }
+                            } + fadeOut()
+                        ) {
+                            if (playType.value != ReadQoranViewModel.PlayType.PLAY_SINGLE)
+                                FloatingActionButton(
+                                    onClick = {
+                                        when (playType.value) {
+                                            ReadQoranViewModel.PlayType.NONE -> {
+                                                viewModel.onEvent(
+                                                    ReadQoranEvent.PlayAllAyah(
+                                                        qoranAyahList
+                                                    )
+                                                )
+                                            }
+                                            ReadQoranViewModel.PlayType.PLAY_ALL -> {
+                                                viewModel.onPlayAyahEvent(
+                                                    PlayAyahEvent.StopAyah
+                                                )
+                                            }
+                                            else -> {}
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        when (playType.value) {
+                                            ReadQoranViewModel.PlayType.NONE -> Icons.Default.PlayCircle
+                                            ReadQoranViewModel.PlayType.PLAY_ALL -> Icons.Default.StopCircle
+                                            else -> Icons.Default.PlayCircle
+                                        },
+                                        contentDescription = "Play All Ayah"
+                                    )
+                                }
+                        }
+                    },
+                    floatingActionButtonPosition = FabPosition.End,
                     snackbarHost = {
                         SnackbarHost(hostState = snackbarHostState)
                     }
@@ -214,14 +270,6 @@ fun ReadQoranScreen(
                                             surahNameAr = qoran.surahNameAr!!,
                                             totalAyah = totalAyahs?.get(index)!!,
                                             descendPlace = qoran.surahDescendPlace!!,
-                                            onPlayAllAyahClick = {
-                                                viewModel.onEvent(
-                                                    ReadQoranEvent.PlayAllAyah(
-                                                        qoranAyahList,
-                                                        qoran.surahNameEn
-                                                    )
-                                                )
-                                            }
                                         )
                                     }
                                     ReadControlPanel(

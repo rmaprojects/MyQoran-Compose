@@ -75,7 +75,7 @@ class ReadQoranViewModel @Inject constructor(
     val uiEventFlow = _uiEventFlow.asSharedFlow()
 
     val playerType = mutableStateOf(PlayType.NONE)
-    val isPlayerPlaying = mutableStateOf(playerClient.isPlaying)
+    val isPlayerPlaying = MutableStateFlow(playerClient.isPlaying)
 
     fun onEvent(event: ReadQoranEvent) {
         when (event) {

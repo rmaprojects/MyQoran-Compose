@@ -1,9 +1,10 @@
 package com.rmaproject.myqoran.ui.screen.read.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayCircle
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,7 +69,6 @@ fun ItemSurahCard(
     surahNameAr: String,
     totalAyah: Int,
     descendPlace: String,
-    onPlayAllAyahClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -123,22 +123,6 @@ fun ItemSurahCard(
                             fontFamily = FontFamily(Font(R.font.usmani_font))
                         )
                     )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Button(
-                        modifier = Modifier.align(Alignment.Center),
-                        shape = ButtonDefaults.elevatedShape,
-                        colors = ButtonDefaults.elevatedButtonColors(),
-                        elevation = ButtonDefaults.elevatedButtonElevation(),
-                        onClick = onPlayAllAyahClick
-                    ) {
-                        Icon(Icons.Default.PlayCircle, contentDescription = null)
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Play All Ayah")
-                    }
                 }
             }
         }

@@ -25,8 +25,7 @@ sealed class ReadQoranEvent {
     ) : ReadQoranEvent()
 
     data class PlayAllAyah(
-        val qoranList: List<Qoran>,
-        val surahName: String
+        val qoranList: List<Qoran>
     ): ReadQoranEvent()
 
     data class SaveBookmark(
