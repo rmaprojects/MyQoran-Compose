@@ -53,8 +53,8 @@ fun PlayerControlPanelBottomBar(
                 }
                 IconButton(onClick = onPlayPauseClick) {
                     Icon(
-                        if (!isPlayerPlaying) Icons.Default.PlayArrow
-                        else Icons.Default.Pause,
+                        if (!isPlayerPlaying) Icons.Default.Pause
+                        else Icons.Default.PlayArrow,
                         contentDescription = "Play Pause Ayah"
                     )
                 }

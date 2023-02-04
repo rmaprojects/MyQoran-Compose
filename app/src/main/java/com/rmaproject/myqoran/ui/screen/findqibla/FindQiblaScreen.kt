@@ -9,6 +9,7 @@ fun FindQiblaScreen(
     modifier: Modifier = Modifier
 ) {
 
+    
 
 }
 

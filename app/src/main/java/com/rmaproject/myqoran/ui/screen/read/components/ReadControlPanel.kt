@@ -8,9 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,11 +21,14 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ReadControlPanel(
+    ayahNumber: Int,
     onPlayAyahClick: () -> Unit,
     onCopyAyahClick: () -> Unit,
     onShareAyahClick: () -> Unit,
     onBookmarkAyahClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isOnSearch: Boolean = false,
+    surahName: String = ""
 ) {
     var isExpanded by remember {
         mutableStateOf(false)
@@ -48,8 +52,13 @@ fun ReadControlPanel(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
-            horizontalArrangement = if (isExpanded) Arrangement.SpaceAround else Arrangement.End,
+                .padding(
+                    horizontal = 8.dp,
+                    vertical = 4.dp
+                ),
+            horizontalArrangement =
+            if (isExpanded) Arrangement.SpaceAround
+            else Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (isExpanded) {
@@ -65,16 +74,43 @@ fun ReadControlPanel(
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = { onPlayAyahClick(); isExpanded = false }) {
-                    Icon(
-                        Icons.Outlined.PlayArrow,
-                        contentDescription = null
-                    )
+                if (!isOnSearch) {
+                    IconButton(onClick = { onPlayAyahClick(); isExpanded = false }) {
+                        Icon(
+                            Icons.Default.PlayArrow,
+                            contentDescription = null
+                        )
+                    }
+                    IconButton(onClick = { onBookmarkAyahClick(); isExpanded = false }) {
+                        Icon(
+                            Icons.Default.Bookmark,
+                            contentDescription = null
+                        )
+                    }
                 }
-                IconButton(onClick = { onBookmarkAyahClick(); isExpanded = false }) {
+            }
+            if (isOnSearch && !isExpanded) {
+                Text(
+                    text = "$surahName: $ayahNumber",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            if (!isExpanded && !isOnSearch) {
+                Box(
+                    modifier = Modifier
+                        .width(56.dp)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.Center
+                ) {
                     Icon(
-                        Icons.Default.Bookmark,
-                        contentDescription = null
+                        Icons.Default.Circle,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "$ayahNumber",
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -96,9 +132,12 @@ fun ReadControlPanel(
 @Composable
 fun ReadControlPanelPreview() {
     ReadControlPanel(
+        1,
         {},
         {},
         {},
         {},
+        isOnSearch = false,
+        surahName = "Alfatihah"
     )
 }

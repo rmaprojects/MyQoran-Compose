@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.rmaproject.myqoran.data.local.entities.Qoran
 import com.rmaproject.myqoran.data.local.entities.SearchSurahResult
 import com.rmaproject.myqoran.data.repository.QoranRepository
+import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranEvent
 import com.rmaproject.myqoran.ui.screen.search.event.SearchEvent
 import com.rmaproject.myqoran.ui.screen.search.event.SearchUiState
 import com.rmaproject.myqoran.ui.screen.search.state.SearchFieldState
+import com.rmaproject.myqoran.utils.GlobalActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -71,6 +73,33 @@ class SearchViewModel @Inject constructor(
                         else _searchSurahState.emit(SearchUiState.NotEmpty(surahList))
                     }
                 }
+            }
+        }
+    }
+
+    fun onPanelEvent(event: ReadQoranEvent) {
+        when (event) {
+            is ReadQoranEvent.ChangePage -> {}
+            is ReadQoranEvent.GetNewAyah -> {}
+            is ReadQoranEvent.PlayAllAyah -> {}
+            is ReadQoranEvent.PlayAyah -> {}
+            is ReadQoranEvent.SaveBookmark -> {}
+            is ReadQoranEvent.SetCurrentReading -> {}
+            is ReadQoranEvent.CopyAyah -> {
+                GlobalActions.copyAyah(
+                    event.context,
+                    event.surahName,
+                    event.ayahText,
+                    event.translation
+                )
+            }
+            is ReadQoranEvent.ShareAyah -> {
+                GlobalActions.shareAyah(
+                    event.context,
+                    event.surahName,
+                    event.ayahText,
+                    event.translation
+                )
             }
         }
     }

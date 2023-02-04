@@ -12,12 +12,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rmaproject.myqoran.components.MyQoranAppBar
 import com.rmaproject.myqoran.data.local.entities.Qoran
 import com.rmaproject.myqoran.ui.screen.read.components.ItemReadAyah
+import com.rmaproject.myqoran.ui.screen.read.components.ReadControlPanel
+import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranEvent
 import com.rmaproject.myqoran.ui.screen.search.components.SearchField
 import com.rmaproject.myqoran.ui.screen.search.event.SearchEvent
 import com.rmaproject.myqoran.ui.screen.search.event.SearchUiState
@@ -31,6 +34,7 @@ fun SearchAyahScreen(
 ) {
 
     val textFieldState = viewModel.searchQuery.value
+    val context = LocalContext.current
 
     LaunchedEffect(textFieldState) {
         viewModel.onEvent(SearchEvent.FindAyah)
@@ -67,7 +71,27 @@ fun SearchAyahScreen(
                 .let { state ->
                     val event = state.value
                     SearchAyahContent(
-                        state = event
+                        state = event,
+                        copyAyah = { surahName, ayahText, translation ->
+                            viewModel.onPanelEvent(
+                                ReadQoranEvent.CopyAyah(
+                                    context,
+                                    surahName,
+                                    ayahText,
+                                    translation
+                                )
+                            )
+                        },
+                        shareAyah = { surahName, ayahText, translation ->
+                            viewModel.onPanelEvent(
+                                ReadQoranEvent.ShareAyah(
+                                    context,
+                                    surahName,
+                                    ayahText,
+                                    translation
+                                )
+                            )
+                        }
                     )
                 }
         }
@@ -76,7 +100,9 @@ fun SearchAyahScreen(
 
 @Composable
 fun SearchAyahContent(
-    state: SearchUiState<List<Qoran>>
+    state: SearchUiState<List<Qoran>>,
+    copyAyah: (String, String, String) -> Unit,
+    shareAyah: (String, String, String) -> Unit
 ) {
     when (state) {
         is SearchUiState.Empty -> {
@@ -108,12 +134,35 @@ fun SearchAyahContent(
                 modifier = Modifier.padding(8.dp),
             ) {
                 items(state.data) { qoran ->
+                    ReadControlPanel(
+                        ayahNumber = qoran.ayahNumber!!,
+                        onPlayAyahClick = {},
+                        onBookmarkAyahClick = {},
+                        onCopyAyahClick = {
+                            copyAyah(
+                                qoran.surahNameEn!!,
+                                qoran.ayahText!!,
+                                qoran.translation_id!!
+                            )
+                        },
+                        onShareAyahClick = {
+                            shareAyah(
+                                qoran.surahNameEn!!,
+                                qoran.ayahText!!,
+                                qoran.translation_id!!
+                            )
+                        },
+                        isOnSearch = true,
+                        surahName = qoran.surahNameEn!!
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     ItemReadAyah(
                         modifier = Modifier.padding(vertical = 8.dp),
                         ayahText = qoran.ayahText,
                         ayahTranslate = qoran.translation_id,
                         isRead = false
                     )
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
         }

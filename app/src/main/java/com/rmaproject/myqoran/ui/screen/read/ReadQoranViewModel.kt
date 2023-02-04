@@ -1,9 +1,5 @@
 package com.rmaproject.myqoran.ui.screen.read
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +17,7 @@ import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranEvent
 import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranUiEvent
 import com.rmaproject.myqoran.ui.screen.read.states.QoranAyahState
 import com.rmaproject.myqoran.utils.Converters
+import com.rmaproject.myqoran.utils.GlobalActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -86,13 +83,12 @@ class ReadQoranViewModel @Inject constructor(
                 _currentPagingIndex.value = event.newPage
             }
             is ReadQoranEvent.CopyAyah -> {
-                val clipboard =
-                    event.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText(
+                GlobalActions.copyAyah(
+                    event.context,
                     event.surahName,
-                    "${event.ayahText}\n\n${event.translation}"
+                    event.ayahText,
+                    event.translation,
                 )
-                clipboard.setPrimaryClip(clip)
                 viewModelScope.launch { _uiEventFlow.emit(ReadQoranUiEvent.SuccessCopiedAyah("Ayah Copied")) }
             }
             is ReadQoranEvent.GetNewAyah -> {
@@ -104,12 +100,12 @@ class ReadQoranViewModel @Inject constructor(
                 _currentReadingState.value = event.currentReading
             }
             is ReadQoranEvent.ShareAyah -> {
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.type = "text/plain"
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, event.surahName)
-                shareIntent.putExtra(Intent.EXTRA_TEXT, event.ayahText)
-                shareIntent.putExtra(Intent.EXTRA_TEXT, event.translation)
-                event.context.startActivity(Intent.createChooser(shareIntent, "Share via"))
+                GlobalActions.shareAyah(
+                    event.context,
+                    event.surahName,
+                    event.ayahText,
+                    event.translation
+                )
                 viewModelScope.launch { _uiEventFlow.emit(ReadQoranUiEvent.SuccessSharedAyah("Ayat dibagikan")) }
             }
             is ReadQoranEvent.PlayAyah -> {
@@ -155,8 +151,10 @@ class ReadQoranViewModel @Inject constructor(
                 playerClient.stop()
                 val musicItems = mutableListOf<MusicItem>()
                 event.qoranList.forEach { qoran ->
-                    val formatSurahNumber = Converters.convertNumberToThreeDigits(qoran.surahNumber ?: return@forEach)
-                    val formatAyahNumber = Converters.convertNumberToThreeDigits(qoran.ayahNumber ?: return@forEach)
+                    val formatSurahNumber =
+                        Converters.convertNumberToThreeDigits(qoran.surahNumber ?: return@forEach)
+                    val formatAyahNumber =
+                        Converters.convertNumberToThreeDigits(qoran.ayahNumber ?: return@forEach)
                     val musicItem = createMusicItem(
                         title = "${qoran.surahNameEn}: ${qoran.ayahNumber}",
                         ayahNumber = formatAyahNumber,
@@ -173,6 +171,13 @@ class ReadQoranViewModel @Inject constructor(
                         val surahName = event.qoranList[position].surahNameEn
                         val ayahNumber = event.qoranList[position].ayahNumber
                         _currentPlayedAyah.value = "${surahName}: $ayahNumber"
+                        viewModelScope.launch {
+                            _uiEventFlow.emit(
+                                ReadQoranUiEvent.PlayingAyahChanged(
+                                    position
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -182,7 +187,9 @@ class ReadQoranViewModel @Inject constructor(
     fun onPlayAyahEvent(event: PlayAyahEvent) {
         when (event) {
             is PlayAyahEvent.PauseAyah -> playerClient.pause()
-            is PlayAyahEvent.PlayPauseAyah -> playerClient.playPause()
+            is PlayAyahEvent.PlayPauseAyah -> {
+                playerClient.playPause(); isPlayerPlaying.value = !isPlayerPlaying.value
+            }
             is PlayAyahEvent.SkipNext -> playerClient.skipToNext()
             is PlayAyahEvent.SkipPrevious -> playerClient.skipToPrevious()
             is PlayAyahEvent.StopAyah -> {

@@ -1,8 +1,6 @@
 package com.rmaproject.myqoran.ui.screen.read
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -131,6 +129,9 @@ fun ReadQoranScreen(
             is ReadQoranUiEvent.SuccessSharedAyah -> {
                 scope.launch { snackbarHostState.showSnackbar(event.message) }
             }
+            is ReadQoranUiEvent.PlayingAyahChanged -> {
+                scope.launch { lazyColumnState.animateScrollToItem(event.position) }
+            }
         }
     }
 
@@ -224,10 +225,11 @@ fun ReadQoranScreen(
                                     }
                                     ReadControlPanel(
                                         modifier = Modifier.padding(vertical = 8.dp),
+                                        ayahNumber = qoran.ayahNumber!!,
                                         onPlayAyahClick = {
                                             viewModel.onEvent(
                                                 ReadQoranEvent.PlayAyah(
-                                                    ayahNumber = qoran.ayahNumber!!,
+                                                    ayahNumber = qoran.ayahNumber,
                                                     surahNumber = qoran.surahNumber!!,
                                                     surahName = qoran.surahNameEn!!
                                                 )
@@ -258,7 +260,7 @@ fun ReadQoranScreen(
                                                 ReadQoranEvent.SaveBookmark(
                                                     surahName = qoran.surahNameEn!!,
                                                     surahNumber = qoran.surahNumber,
-                                                    ayahNumber = qoran.ayahNumber!!,
+                                                    ayahNumber = qoran.ayahNumber,
                                                     juzNumber = qoran.juzNumber,
                                                     pageNumber = qoran.page,
                                                     position = index,
@@ -272,10 +274,11 @@ fun ReadQoranScreen(
                                         ayahText = qoran.ayahText,
                                         ayahTranslate = qoran.translation_id
                                     )
+                                    Spacer(modifier = Modifier.height(12.dp))
                                     with(LastReadPreferences) {
                                         surahName = qoran.surahNameEn!!
                                         surahNumber = qoran.surahNumber ?: 0
-                                        ayahNumber = qoran.ayahNumber ?: 0
+                                        ayahNumber = qoran.ayahNumber
                                         juzNumber = qoran.juzNumber ?: 0
                                         pageNumber = qoran.page ?: 0
                                         indexType = viewModel.indexType

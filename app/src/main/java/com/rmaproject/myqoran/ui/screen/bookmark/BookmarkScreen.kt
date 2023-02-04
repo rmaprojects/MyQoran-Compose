@@ -93,7 +93,7 @@ fun BookmarkContent(
                 itemsIndexed(
                     items = bookmarkList,
                     key = { _, item -> item.id!! }
-                ) { index, bookmark ->
+                ) { _, bookmark ->
                     val dismissState = rememberDismissState(
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
