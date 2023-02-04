@@ -10,6 +10,12 @@ object Converters {
         return SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(dateAdded))
     }
 
+    fun convertTImeMillisToActualTime(
+        timeInMillis: Long
+    ): String {
+        return SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(timeInMillis))
+    }
+
     fun convertNumberToThreeDigits(
         number: Int
     ): String {

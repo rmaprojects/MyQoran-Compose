@@ -3,12 +3,16 @@ package com.rmaproject.myqoran.data.repository
 import com.rmaproject.myqoran.data.local.BookmarkDatabase
 import com.rmaproject.myqoran.data.local.QoranDatabase
 import com.rmaproject.myqoran.data.local.entities.*
+import com.rmaproject.myqoran.data.remote.model.AdzanScheduleResponse
+import com.rmaproject.myqoran.data.remote.service.ApiInterface
 import com.rmaproject.myqoran.utils.Queries
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import javax.inject.Inject
 
 class QoranRepository @Inject constructor(
     private val qoranDatabase: QoranDatabase,
+    private val api: ApiInterface,
     private val bookmarkDatabase: BookmarkDatabase
 ) {
     fun getQoranIndexBySurah(): Flow<List<Surah>> {
@@ -72,5 +76,12 @@ class QoranRepository @Inject constructor(
 
     suspend fun deleteAllBookmark() {
         bookmarkDatabase.bookmarkDao().deleteAllBookmark()
+    }
+
+    suspend fun getAdzanSchedule(
+        latitude: String,
+        longitude: String
+    ): AdzanScheduleResponse {
+        return api.getAdzanSchedule(latitude, longitude)
     }
 }

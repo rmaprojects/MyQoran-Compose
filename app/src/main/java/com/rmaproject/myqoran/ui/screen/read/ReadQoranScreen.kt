@@ -64,7 +64,6 @@ fun ReadQoranScreen(
     val lazyColumnState = rememberLazyListState()
 
     val qoranAyahList = viewModel.qoranState.value.listAyah
-    val currentPlayingAyah = viewModel.currentPlayedAyah.value
     val playType = viewModel.playerType
     val isPlayerPlaying = viewModel.isPlayerPlaying.value
 
@@ -143,9 +142,7 @@ fun ReadQoranScreen(
         currentPage = pagerState.currentPage,
         onIndexClick = { page ->
             scope.launch {
-                pagerState.scrollToPage(page); drawerState.close(); lazyColumnState.scrollToItem(
-                0
-            )
+                pagerState.scrollToPage(page); drawerState.close(); lazyColumnState.scrollToItem(0)
             }
         },
         navigateToSearchAyah = navigateToSearchAyah
@@ -175,15 +172,17 @@ fun ReadQoranScreen(
                             playType.value == ReadQoranViewModel.PlayType.PLAY_SINGLE ||
                             playType.value == ReadQoranViewModel.PlayType.PLAY_ALL
                         ) {
-                            PlayerControlPanelBottomBar(
-                                currentPlaying = currentPlayingAyah,
-                                playType = playType.value,
-                                isPlayerPlaying = isPlayerPlaying,
-                                onSkipNextClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipNext) },
-                                onPlayPauseClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.PlayPauseAyah) },
-                                onSkipPrevClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipPrevious) },
-                                onStopClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.StopAyah) }
-                            )
+                            viewModel.currentPlayedAyah.collectAsState().let {
+                                PlayerControlPanelBottomBar(
+                                    currentPlaying = it.value,
+                                    playType = playType.value,
+                                    isPlayerPlaying = isPlayerPlaying,
+                                    onSkipNextClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipNext) },
+                                    onPlayPauseClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.PlayPauseAyah) },
+                                    onSkipPrevClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipPrevious) },
+                                    onStopClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.StopAyah) }
+                                )
+                            }
                         }
                     },
                     snackbarHost = {
@@ -278,7 +277,7 @@ fun ReadQoranScreen(
                                         surahNumber = qoran.surahNumber ?: 0
                                         ayahNumber = qoran.ayahNumber ?: 0
                                         juzNumber = qoran.juzNumber ?: 0
-                                        pageNumber = qoran.page?: 0
+                                        pageNumber = qoran.page ?: 0
                                         indexType = viewModel.indexType
                                         lastPosition = index
                                     }

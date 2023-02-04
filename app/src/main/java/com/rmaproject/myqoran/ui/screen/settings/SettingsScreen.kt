@@ -29,6 +29,7 @@ import com.rmaproject.myqoran.utils.GlobalState
 @Composable
 fun SettingsScreen(
     openDrawer: () -> Unit,
+    goToSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isDialogForLanguageShown by remember {
@@ -55,7 +56,7 @@ fun SettingsScreen(
             MyQoranHomeAppBar(
                 openDrawer = openDrawer,
                 currentDestination = Screen.Settings.route,
-                goToSearch = {}
+                goToSearch = goToSearch
             )
         }
     ) { innerPadding ->
@@ -181,5 +182,5 @@ fun SettingsScreen(
 @Preview
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen({})
+    SettingsScreen({}, {})
 }

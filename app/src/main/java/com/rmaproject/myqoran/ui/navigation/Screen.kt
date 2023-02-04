@@ -44,4 +44,13 @@ class MyQoranNavigationActions(navController: NavController) {
             restoreState = true
         }
     }
+    val navigateAdzanSchedule: () -> Unit = {
+        navController.navigate(Screen.AdzanSchedule.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.rmaproject.myqoran.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
@@ -23,6 +24,7 @@ fun MyQoranDrawer(
     closeDrawer: () -> Unit,
     navigateToHome: () -> Unit,
     navigateToSettings: () -> Unit,
+    navigateToAdzanSchedule: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ModalDrawerSheet(
@@ -64,6 +66,20 @@ fun MyQoranDrawer(
             },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
+        NavigationDrawerItem(
+            label = { Text("Jadwal Sholat") },
+            selected = currentRoute == Screen.AdzanSchedule.route,
+            icon = {
+                Icon(
+                    Icons.Default.AccessTime,
+                    contentDescription = "Clock Icon"
+                )
+            },
+            onClick = {
+                navigateToAdzanSchedule(); closeDrawer()
+            },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
     }
 }
 
@@ -99,5 +115,5 @@ fun MyQoranLogo(
 @Preview
 @Composable
 fun MyQoranDrawerPreview() {
-    MyQoranDrawer("home", {}, {}, {})
+    MyQoranDrawer("home", {}, {}, {}, {})
 }

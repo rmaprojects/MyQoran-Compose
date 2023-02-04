@@ -1,4 +1,4 @@
-package com.rmaproject.myqoran.service
+package com.rmaproject.myqoran.service.player
 
 import snow.player.PlayerService
 import snow.player.annotation.PersistenceId

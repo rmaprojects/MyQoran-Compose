@@ -22,9 +22,7 @@ import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranUiEvent
 import com.rmaproject.myqoran.ui.screen.read.states.QoranAyahState
 import com.rmaproject.myqoran.utils.Converters
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import snow.player.PlayMode
 import snow.player.PlayerClient
@@ -73,8 +71,8 @@ class ReadQoranViewModel @Inject constructor(
 
     val indexList = mutableListOf<Qoran>()
 
-    private val _currentPlayedAyah = mutableStateOf("")
-    val currentPlayedAyah = _currentPlayedAyah
+    private val _currentPlayedAyah = MutableStateFlow("")
+    val currentPlayedAyah = _currentPlayedAyah.asStateFlow()
 
     private val _uiEventFlow = MutableSharedFlow<ReadQoranUiEvent>()
     val uiEventFlow = _uiEventFlow.asSharedFlow()
@@ -171,10 +169,10 @@ class ReadQoranViewModel @Inject constructor(
                     playerClient.setPlaylist(playlist, true)
                     playerClient.playMode = PlayMode.PLAYLIST_LOOP
                     playerType.value = PlayType.PLAY_ALL
-                    playerClient.addOnPlaylistChangeListener { _, position ->
+                    playerClient.addOnPlayingMusicItemChangeListener { _, position, _ ->
                         val surahName = event.qoranList[position].surahNameEn
                         val ayahNumber = event.qoranList[position].ayahNumber
-                        _currentPlayedAyah.value = "${surahName}:${ayahNumber}"
+                        _currentPlayedAyah.value = "${surahName}: $ayahNumber"
                     }
                 }
             }

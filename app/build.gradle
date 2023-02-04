@@ -26,6 +26,7 @@ android {
 
         buildConfigField "String", "AUDIO_BASE_URL", "\"${properties.getProperty("AUDIO_BASE_URL")}\""
         buildConfigField "String", "NOTIFICATION_ICON_URL", "\"${properties.getProperty("NOTIFICATION_ICON_URL")}\""
+        buildConfigField "String", "API_BASE_URL", "\"${properties.getProperty("API_BASE_URL")}\""
     }
 
     buildTypes {
@@ -84,6 +85,11 @@ dependencies {
     implementation "androidx.room:room-runtime:2.5.0"
     kapt 'androidx.room:room-compiler:2.5.0'
 
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.5"
+
     //Pager
     implementation "com.google.accompanist:accompanist-pager:0.29.0-alpha"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.29.0-alpha"
@@ -96,6 +102,9 @@ dependencies {
 
     //Snow
     implementation 'com.github.jrfeng.snow:player:1.2'
+
+    //Location
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }
 
 kapt {

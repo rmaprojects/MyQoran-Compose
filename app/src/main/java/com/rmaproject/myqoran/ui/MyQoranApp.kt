@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -57,25 +56,32 @@ fun MyQoranApp(
                 currentRoute = currentRoute,
                 closeDrawer = { scope.launch { drawerState.close() } },
                 navigateToHome = navActions.navigateToHome,
-                navigateToSettings = navActions.navigateToSettings
+                navigateToSettings = navActions.navigateToSettings,
+                navigateToAdzanSchedule = navActions.navigateAdzanSchedule
             )
         }, drawerState = drawerState, gesturesEnabled = currentRoute != Screen.ReadQoran.route
     ) {
         NavHost(
             navController = navController, startDestination = Screen.Home.route
         ) {
-            composable(Screen.Settings.route) {
-                SettingsScreen(openDrawer = { scope.launch { drawerState.open() } })
-            }
-            composable(Screen.AdzanSchedule.route) {
-                AdzanScheduleScreen()
+            composable(Screen.SearchAyah.route) {
+                SearchAyahScreen(
+                    navigateUp = { navController.navigateUp() }
+                )
             }
             composable(Screen.FindQibla.route) {
                 FindQiblaScreen()
             }
-            composable(Screen.SearchAyah.route) {
-                SearchAyahScreen(
-                    navigateUp = { navController.navigateUp() }
+            composable(Screen.AdzanSchedule.route) {
+                AdzanScheduleScreen(
+                    openDrawer = { scope.launch{ drawerState.open() } },
+                    goToSearch = { navController.navigate(Screen.SearchSurah.route) }
+                )
+            }
+            composable(Screen.Settings.route) {
+                SettingsScreen(
+                    openDrawer = { scope.launch { drawerState.open() } },
+                    goToSearch = { navController.navigate(Screen.SearchSurah.route) }
                 )
             }
             composable(Screen.SearchSurah.route) {
@@ -154,10 +160,4 @@ fun MyQoranApp(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun MyQoranAppPreview() {
-    MyQoranApp()
 }

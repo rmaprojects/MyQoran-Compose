@@ -20,7 +20,7 @@ fun FindQiblaCard(
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
-            .height(128.dp)
+            .height(56.dp)
     ) {
         Row(
             modifier = Modifier
