@@ -21,10 +21,10 @@ import com.rmaproject.myqoran.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyQoranHomeAppBar(
-    goToSearch: () -> Unit,
     openDrawer: () -> Unit,
     currentDestination: String?,
     modifier: Modifier = Modifier,
+    goToSearch: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -85,5 +85,5 @@ fun MyQoranHomeAppBar(
 @Preview
 @Composable
 fun MyQoranHomeAppBarPreview() {
-    MyQoranHomeAppBar({}, {}, null)
+    MyQoranHomeAppBar({}, "")
 }

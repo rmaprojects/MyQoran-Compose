@@ -25,6 +25,7 @@ fun MyQoranDrawer(
     navigateToHome: () -> Unit,
     navigateToSettings: () -> Unit,
     navigateToAdzanSchedule: () -> Unit,
+    navigateToFindQibla: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ModalDrawerSheet(
@@ -53,20 +54,6 @@ fun MyQoranDrawer(
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
         NavigationDrawerItem(
-            label = { Text("Settings") },
-            selected = currentRoute == Screen.Settings.route,
-            icon = {
-                Icon(
-                    Icons.Default.Settings,
-                    contentDescription = "Settings Icon"
-                )
-            },
-            onClick = {
-                navigateToSettings(); closeDrawer()
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-        NavigationDrawerItem(
             label = { Text("Jadwal Sholat") },
             selected = currentRoute == Screen.AdzanSchedule.route,
             icon = {
@@ -77,6 +64,35 @@ fun MyQoranDrawer(
             },
             onClick = {
                 navigateToAdzanSchedule(); closeDrawer()
+            },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+        NavigationDrawerItem(
+            label = { Text("Cari Kiblat") },
+            selected = currentRoute == Screen.FindQibla.route,
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.kaba_icon),
+                    contentDescription = "Kaba Icon",
+                    modifier = Modifier.size(24.dp)
+                )
+            },
+            onClick = {
+                navigateToFindQibla(); closeDrawer()
+            },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+        NavigationDrawerItem(
+            label = { Text("Settings") },
+            selected = currentRoute == Screen.Settings.route,
+            icon = {
+                Icon(
+                    Icons.Default.Settings,
+                    contentDescription = "Settings Icon"
+                )
+            },
+            onClick = {
+                navigateToSettings(); closeDrawer()
             },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
@@ -115,5 +131,5 @@ fun MyQoranLogo(
 @Preview
 @Composable
 fun MyQoranDrawerPreview() {
-    MyQoranDrawer("home", {}, {}, {}, {})
+    MyQoranDrawer("home", {}, {}, {}, {}, {})
 }

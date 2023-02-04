@@ -57,7 +57,8 @@ fun MyQoranApp(
                 closeDrawer = { scope.launch { drawerState.close() } },
                 navigateToHome = navActions.navigateToHome,
                 navigateToSettings = navActions.navigateToSettings,
-                navigateToAdzanSchedule = navActions.navigateAdzanSchedule
+                navigateToAdzanSchedule = navActions.navigateAdzanSchedule,
+                navigateToFindQibla = navActions.navigateToFindQibla
             )
         }, drawerState = drawerState, gesturesEnabled = currentRoute != Screen.ReadQoran.route
     ) {
@@ -70,18 +71,20 @@ fun MyQoranApp(
                 )
             }
             composable(Screen.FindQibla.route) {
-                FindQiblaScreen()
+                FindQiblaScreen(
+                    openDrawer = {
+                        scope.launch { drawerState.open() }
+                    }
+                )
             }
             composable(Screen.AdzanSchedule.route) {
                 AdzanScheduleScreen(
-                    openDrawer = { scope.launch{ drawerState.open() } },
-                    goToSearch = { navController.navigate(Screen.SearchSurah.route) }
+                    openDrawer = { scope.launch { drawerState.open() } },
                 )
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(
-                    openDrawer = { scope.launch { drawerState.open() } },
-                    goToSearch = { navController.navigate(Screen.SearchSurah.route) }
+                    openDrawer = { scope.launch { drawerState.open() } }
                 )
             }
             composable(Screen.SearchSurah.route) {

@@ -27,6 +27,8 @@ android {
         buildConfigField "String", "AUDIO_BASE_URL", "\"${properties.getProperty("AUDIO_BASE_URL")}\""
         buildConfigField "String", "NOTIFICATION_ICON_URL", "\"${properties.getProperty("NOTIFICATION_ICON_URL")}\""
         buildConfigField "String", "API_BASE_URL", "\"${properties.getProperty("API_BASE_URL")}\""
+        buildConfigField "String", "QIBLA_FINDER_URL_ID", "\"${properties.getProperty("QIBLA_FINDER_URL_ID")}\""
+        buildConfigField "String", "QIBLA_FINDER_URL_EN", "\"${properties.getProperty("QIBLA_FINDER_URL_EN")}\""
     }
 
     buildTypes {
@@ -105,6 +107,9 @@ dependencies {
 
     //Location
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    //AgentWeb
+    implementation 'com.github.Justson.AgentWeb:agentweb-core:v4.1.9-androidx'
 }
 
 kapt {

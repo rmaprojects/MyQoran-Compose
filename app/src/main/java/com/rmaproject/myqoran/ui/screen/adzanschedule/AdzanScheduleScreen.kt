@@ -23,7 +23,6 @@ import java.util.Locale.*
 @Composable
 fun AdzanScheduleScreen(
     openDrawer: () -> Unit,
-    goToSearch: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AdzanScheduleViewModel = hiltViewModel()
 ) {
@@ -34,7 +33,6 @@ fun AdzanScheduleScreen(
         modifier = modifier,
         topBar = {
             MyQoranHomeAppBar(
-                goToSearch = goToSearch,
                 openDrawer = openDrawer,
                 currentDestination = "Jadwal Sholat"
             )
@@ -47,7 +45,7 @@ fun AdzanScheduleScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
             viewModel.currentLocation.collectAsState().let {
-                val address = Geocoder(
+                @Suppress("DEPRECATION") val address = Geocoder(
                     context,
                     getDefault()
                 ).getFromLocation(

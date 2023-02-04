@@ -29,7 +29,6 @@ import com.rmaproject.myqoran.utils.GlobalState
 @Composable
 fun SettingsScreen(
     openDrawer: () -> Unit,
-    goToSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isDialogForLanguageShown by remember {
@@ -55,13 +54,13 @@ fun SettingsScreen(
         topBar = {
             MyQoranHomeAppBar(
                 openDrawer = openDrawer,
-                currentDestination = Screen.Settings.route,
-                goToSearch = goToSearch
+                currentDestination = Screen.Settings.route
             )
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
                 .verticalScroll(scrollState),
         ) {
             SettingsSwitchCard(
@@ -182,5 +181,5 @@ fun SettingsScreen(
 @Preview
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen({}, {})
+    SettingsScreen({})
 }

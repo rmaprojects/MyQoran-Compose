@@ -53,4 +53,13 @@ class MyQoranNavigationActions(navController: NavController) {
             restoreState = true
         }
     }
+    val navigateToFindQibla: () -> Unit = {
+        navController.navigate(Screen.FindQibla.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 }
