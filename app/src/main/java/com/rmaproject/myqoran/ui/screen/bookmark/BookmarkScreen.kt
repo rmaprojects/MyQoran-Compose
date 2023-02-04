@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.MyQoranAppBar
 import com.rmaproject.myqoran.components.TopBarActionItem
 import com.rmaproject.myqoran.data.local.entities.Bookmark
@@ -37,7 +39,8 @@ fun BookmarkScreen(
 ) {
 
     val actionList = listOf(
-        TopBarActionItem(text = "Delete All Bookmark",
+        TopBarActionItem(
+            text = stringResource(R.string.txt_delete_all_bookmark),
             icon = Icons.Default.DeleteForever,
             onClick = { viewModel.deleteAllBookmarks() }
         )
@@ -45,7 +48,7 @@ fun BookmarkScreen(
 
     Scaffold(modifier = modifier, topBar = {
         MyQoranAppBar(
-            currentDestinationTitle = "Bookmarks",
+            currentDestinationTitle = "Bookmark",
             navigateUp = navigateUp,
             actions = actionList,
         )
@@ -79,7 +82,7 @@ fun BookmarkContent(
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = "Belum ada bookmark yang ditambahkan",
+                    text = stringResource(R.string.txt_no_bookmark),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                 )

@@ -11,10 +11,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.just.agentweb.AgentWeb
 import com.rmaproject.myqoran.BuildConfig
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.MyQoranHomeAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +33,7 @@ fun FindQiblaScreen(
         topBar = {
             MyQoranHomeAppBar(
                 openDrawer = openDrawer,
-                currentDestination = "Cari Kiblat"
+                currentDestination = stringResource(R.string.txt_find_qibla)
             )
         }
     ) { innerPadding ->

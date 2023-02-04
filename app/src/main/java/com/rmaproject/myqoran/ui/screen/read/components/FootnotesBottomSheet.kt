@@ -40,10 +40,3 @@ fun FootNotesBottomSheet(
         )
     }
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun FootNotesBottomSheetPreview() {
-    FootNotesBottomSheet("Lorem ipsum dolor sit amet",{})
-}

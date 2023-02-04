@@ -12,10 +12,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.MyQoranAppBar
 import com.rmaproject.myqoran.data.local.entities.SearchSurahResult
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_SURAH
@@ -43,7 +45,7 @@ fun SearchSurahScreen(
         modifier = modifier,
         topBar = {
             MyQoranAppBar(
-                currentDestinationTitle = "Search Surah",
+                currentDestinationTitle = stringResource(R.string.txt_search_surah),
                 navigateUp = navigateUp
             )
         }
@@ -90,7 +92,7 @@ fun SearchSurahContent(
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = "Tidak ditemukan surat dengan nama \"${state.query}\"",
+                    text = stringResource(id = R.string.txt_surah_not_found, state.query),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                 )
@@ -102,7 +104,7 @@ fun SearchSurahContent(
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = "Kotak pencarian masih kosong, isi dulu",
+                    text = stringResource(id = R.string.txt_empty_search_box),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                 )

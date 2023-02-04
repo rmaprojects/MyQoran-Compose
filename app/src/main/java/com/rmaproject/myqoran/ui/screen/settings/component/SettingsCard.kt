@@ -34,7 +34,7 @@ fun SettingsSwitchCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(12.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -45,7 +45,7 @@ fun SettingsSwitchCard(
                     .weight(1f)
             )
             Column(
-                modifier = Modifier.weight(3f),
+                modifier = Modifier.weight(4f),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -166,14 +166,4 @@ fun SettingsSliderCard(
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-fun SettingsSliderCardPreview() {
-    SettingsSliderCard(
-        32F,
-        {}
-    )
 }

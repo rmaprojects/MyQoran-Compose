@@ -13,10 +13,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.MyQoranAppBar
+import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
 import com.rmaproject.myqoran.data.local.entities.Qoran
 import com.rmaproject.myqoran.ui.screen.read.components.ItemReadAyah
 import com.rmaproject.myqoran.ui.screen.read.components.ReadControlPanel
@@ -44,7 +47,7 @@ fun SearchAyahScreen(
         modifier = modifier,
         topBar = {
             MyQoranAppBar(
-                currentDestinationTitle = "Search Ayah",
+                currentDestinationTitle = stringResource(R.string.txt_search_ayah),
                 navigateUp = navigateUp
             )
         },
@@ -111,7 +114,7 @@ fun SearchAyahContent(
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = "Tidak ditemukan surat dengan nama \"${state.query}\"",
+                    text = stringResource(R.string.txt_ayah_not_found, state.query),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                 )
@@ -123,7 +126,7 @@ fun SearchAyahContent(
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = "Kotak pencarian masih kosong, isi dulu",
+                    text = stringResource(R.string.txt_empty_search_box),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center,
                 )
@@ -142,14 +145,20 @@ fun SearchAyahContent(
                             copyAyah(
                                 qoran.surahNameEn!!,
                                 qoran.ayahText!!,
-                                qoran.translation_id!!
+                                if (SettingsPreferences.currentLanguage
+                                    == SettingsPreferences.INDONESIAN
+                                ) qoran.translation_id ?: ""
+                                else qoran.translation_en ?: ""
                             )
                         },
                         onShareAyahClick = {
                             shareAyah(
                                 qoran.surahNameEn!!,
                                 qoran.ayahText!!,
-                                qoran.translation_id!!
+                                if (SettingsPreferences.currentLanguage
+                                    == SettingsPreferences.INDONESIAN
+                                ) qoran.translation_id ?: ""
+                                else qoran.translation_en ?: ""
                             )
                         },
                         isOnSearch = true,
@@ -159,7 +168,10 @@ fun SearchAyahContent(
                     ItemReadAyah(
                         modifier = Modifier.padding(vertical = 8.dp),
                         ayahText = qoran.ayahText,
-                        ayahTranslate = qoran.translation_id,
+                        ayahTranslate = if (SettingsPreferences.currentLanguage
+                            == SettingsPreferences.INDONESIAN
+                        ) qoran.translation_id ?: ""
+                        else qoran.translation_en ?: "",
                         isRead = false
                     )
                     Spacer(modifier = Modifier.height(12.dp))

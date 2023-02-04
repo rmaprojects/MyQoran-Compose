@@ -5,15 +5,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.ActionItem
 import com.rmaproject.myqoran.components.MyQoranAlertDialog
 import com.rmaproject.myqoran.components.MyQoranHomeAppBar
@@ -66,19 +66,32 @@ fun SettingsScreen(
             SettingsSwitchCard(
                 modifier = Modifier.padding(8.dp),
                 cardIcon = Icons.Default.DarkMode,
-                cardFor = "Dark Mode",
-                description = "Change your theme",
+                cardFor = stringResource(R.string.txt_dark_mode),
+                description = stringResource(R.string.txt_change_your_theme),
                 isSwitchClicked = GlobalState.isDarkMode,
                 onSwitchClick = { isChecked ->
                     GlobalState.isDarkMode = isChecked
                     SettingsPreferences.isDarkMode = isChecked
                 }
             )
+            SettingsSwitchCard(
+                modifier = Modifier.padding(8.dp),
+                cardIcon = Icons.Default.MenuBook,
+                cardFor = stringResource(R.string.txt_focus_read),
+                description = stringResource(R.string.txt_desc_focus_read),
+                isSwitchClicked = GlobalState.isFocusRead,
+                onSwitchClick = { isChecked ->
+                    GlobalState.isFocusRead = isChecked
+                    SettingsPreferences.isFocusReadActive = isChecked
+                }
+            )
             SettingsClickCard(
                 modifier = Modifier.padding(8.dp),
                 cardIcon = Icons.Default.Language,
-                cardFor = "Change Language",
-                description = "Current language: ${if (languageValue == 0) "Indonesia" else "English"}",
+                cardFor = stringResource(R.string.txt_change_language),
+                description = stringResource(R.string.txt_current_lang,
+                    if (languageValue == SettingsPreferences.INDONESIAN) "Indonesia" else "English"
+                ),
                 onClick = {
                     isDialogForLanguageShown = true
                 }
@@ -94,8 +107,8 @@ fun SettingsScreen(
             SettingsClickCard(
                 modifier = Modifier.padding(8.dp),
                 cardIcon = Icons.Default.VolumeUp,
-                cardFor = "Pilih Qori",
-                description = "Qori sekarang: ${qoriValue.qoriName}",
+                cardFor = stringResource(R.string.txt_choose_reciter),
+                description = stringResource(R.string.txt_current_reciter, qoriValue.qoriName),
                 onClick = {
                     isDialogForChangeQoriShown = true
                 },
@@ -123,9 +136,9 @@ fun SettingsScreen(
             )
             MyQoranAlertDialog(
                 icon = Icons.Default.Language,
-                title = "Change Language",
+                title = stringResource(id = R.string.txt_choose_reciter),
                 actionItemList = actionList,
-                dismissButtonText = "Cancel",
+                dismissButtonText = stringResource(R.string.txt_cancel),
                 onDismissClick = { isDialogForLanguageShown = false },
                 onConfirmClick = { isDialogForLanguageShown = false }
             )
@@ -168,9 +181,9 @@ fun SettingsScreen(
             )
             MyQoranAlertDialog(
                 icon = null,
-                title = "Pilih Qori",
+                title = stringResource(id = R.string.txt_choose_reciter),
                 actionItemList = actionList,
-                dismissButtonText = "Cancel",
+                dismissButtonText = stringResource(id = R.string.txt_cancel),
                 onDismissClick = { isDialogForChangeQoriShown = false },
                 onConfirmClick = { isDialogForChangeQoriShown = false }
             )

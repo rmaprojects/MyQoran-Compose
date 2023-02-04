@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="txt_page">Halaman %1$s</string>
+    <string name="txt_juz">Juz %1$s</string>
+    <string name="desc_bookmark_card">Baca ayat yang telah anda tandai</string>
+    <string name="txt_sholat_schedule">Jadwal Sholat</string>
+    <string name="txt_your_location">Lokasi anda: %1$s</string>
+    <string name="txt_please_turn_on_location">Mohon aktifkan lokasi anda untuk mendapatkan waktu adzan di tempat anda</string>
+    <string name="txt_delete_all_bookmark">Hapus semua bookmark</string>
+    <string name="txt_no_bookmark">Belum ada bookmark yang ditambahkan</string>
+    <string name="txt_find_qibla">Cari Kiblat</string>
+    <string name="txt_last_read">Bacaan Terakhir</string>
+    <string name="txt_desc_no_last_read">Kamu perlu membaca dulu</string>
+    <string name="txt_desc_continue_read">Lanjutkan membaca: %1$s</string>
+    <string name="text_desc_play_all_ayah">Putar semua ayat</string>
+    <string name="txt_empty_search_box">Kotak pencarian masih kosong, isi dulu</string>
+    <string name="txt_surah_not_found">Tidak ditemukan surat dengan nama \"%1$s\"</string>
+    <string name="txt_ayah_not_found">Tidak ditemukan ayat yang berisi: \"%1$s\"</string>
+    <string name="txt_search_ayah">Cari Ayat</string>
+    <string name="txt_search_surah">Cari Surah</string>
+    <string name="txt_dark_mode">Mode Gelap</string>
+    <string name="txt_change_your_theme">Ubah tampilan aplikasi</string>
+    <string name="txt_change_language">Ubah bahasa</string>
+    <string name="txt_current_lang">Bahasa sekarang: %1$s</string>
+    <string name="txt_choose_reciter">Pilih Qori</string>
+    <string name="txt_current_reciter">"Qori sekarang: %1$s"</string>
+    <string name="txt_cancel">Batal</string>
+    <string name="txt_desc_focus_read">Hilangkan terjemah dan menu agar fokus membaca</string>
+    <string name="txt_focus_read">Mode Fokus Baca</string>
+</resources>

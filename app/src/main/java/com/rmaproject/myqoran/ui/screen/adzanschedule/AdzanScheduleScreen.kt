@@ -11,9 +11,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.MyQoranHomeAppBar
 import com.rmaproject.myqoran.ui.screen.adzanschedule.component.FindQiblaCard
 import com.rmaproject.myqoran.ui.screen.adzanschedule.state.AdzanScheduleState
@@ -34,7 +36,7 @@ fun AdzanScheduleScreen(
         topBar = {
             MyQoranHomeAppBar(
                 openDrawer = openDrawer,
-                currentDestination = "Jadwal Sholat"
+                currentDestination = stringResource(R.string.txt_sholat_schedule)
             )
         }
     ) { innerPadding ->
@@ -60,7 +62,7 @@ fun AdzanScheduleScreen(
                     val currentLocation = "$locality, $subLocality, $subAdminArea"
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Lokasi anda: $currentLocation",
+                        text = stringResource(R.string.txt_your_location, currentLocation),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge,
                     )
@@ -85,7 +87,7 @@ fun AdzanScheduleScreen(
                                         verticalArrangement = Arrangement.Center
                                     ) {
                                         Text(
-                                            text = "Mohon aktifkan lokasi anda untuk mendapatkan waktu adzan di tempat anda",
+                                            text = stringResource(R.string.txt_please_turn_on_location),
                                             style = MaterialTheme.typography.titleMedium,
                                             textAlign = TextAlign.Center
                                         )

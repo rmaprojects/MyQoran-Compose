@@ -8,9 +8,10 @@ object SettingsPreferences : KotprefModel() {
     const val INDONESIAN = 0
     const val ENGLISH = 1
 
-    const val SLIDER_DEF_VALUE = 32F
+    private const val SLIDER_DEF_VALUE = 32F
 
     var isDarkMode by booleanPref(false)
+    var isFocusReadActive by booleanPref(false)
     var currentLanguage by intPref(INDONESIAN)
     var currentQoriOption by enumOrdinalPref(QoriOptions.ABD_SUDAIS)
     var ayahTextSize by floatPref(SLIDER_DEF_VALUE)

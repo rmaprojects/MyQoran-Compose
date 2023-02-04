@@ -14,7 +14,9 @@ fun SpannableText(
     text: String,
     modifier: Modifier = Modifier,
     spanStyle: SpanStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
-    style: TextStyle = LocalTextStyle.current,
+    style: TextStyle = MaterialTheme.typography.bodyLarge.copy(
+        color = MaterialTheme.colorScheme.onBackground
+    ),
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,

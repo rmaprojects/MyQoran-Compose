@@ -8,4 +8,5 @@ import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
 object GlobalState {
     var isDarkMode by mutableStateOf(SettingsPreferences.isDarkMode)
     var ayahTextSize by mutableStateOf(SettingsPreferences.ayahTextSize)
+    var isFocusRead by mutableStateOf(SettingsPreferences.isFocusReadActive)
 }

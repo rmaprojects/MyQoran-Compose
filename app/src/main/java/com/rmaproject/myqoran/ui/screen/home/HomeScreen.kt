@@ -85,11 +85,11 @@ fun HomeScreen(
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp),
-                        cardName = "Last Read",
+                        cardName = stringResource(R.string.txt_last_read),
                         icon = Icons.Default.History,
                         cardDescription =
-                        if (LastReadPreferences.surahName == null) "Kamu perlu membaca dulu"
-                        else "Lanjutkan membaca:\n${LastReadPreferences.surahName}: ${LastReadPreferences.ayahNumber}",
+                        if (LastReadPreferences.surahName == null) stringResource(R.string.txt_desc_no_last_read)
+                        else stringResource(R.string.txt_desc_continue_read, "\n${LastReadPreferences.surahName}: ${LastReadPreferences.ayahNumber}"),
                         onClick = navigateLastRead
                     )
                     HeaderCard(

@@ -42,22 +42,24 @@ fun ItemReadAyah(
                 )
             )
             Spacer(Modifier.height(32.dp))
-            if (isRead) {
-                SpannableText(
-                    text = ayahTranslate ?: "",
-                    onClick = {
-                        onTranslateClick(footNote)
-                    },
-                )
-            }
-            if (!isRead) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = ayahTranslate ?: "",
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+            if (!GlobalState.isFocusRead) {
+                if (isRead) {
+                    SpannableText(
+                        text = ayahTranslate ?: "",
+                        onClick = {
+                            onTranslateClick(footNote)
+                        },
+                    )
+                }
+                if (!isRead) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = ayahTranslate ?: "",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
     }
