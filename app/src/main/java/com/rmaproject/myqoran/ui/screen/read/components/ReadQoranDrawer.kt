@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.rmaproject.myqoran.data.local.entities.Qoran
@@ -96,14 +95,29 @@ fun DrawerHeader(
             modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(indexList) { qoran ->
+                val equalIndicator = when (currentIndex) {
+                    ORDER_BY_SURAH -> currentPage == qoran.surahNumber
+                    ORDER_BY_JUZ -> currentPage == qoran.juzNumber
+                    ORDER_BY_PAGE -> currentPage == qoran.page
+                    else -> true
+                }
                 TextButton(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onIndexClick(qoran.surahNumber!!) },
-                    enabled = currentPage != qoran.surahNumber,
+                    onClick = {
+                        onIndexClick(
+                            when (currentIndex) {
+                                ORDER_BY_SURAH -> qoran.surahNumber!!
+                                ORDER_BY_JUZ -> qoran.juzNumber!!
+                                ORDER_BY_PAGE -> qoran.page!!
+                                else -> 0
+                            }
+                        )
+                    },
+                    enabled = !equalIndicator,
                     colors = ButtonDefaults.textButtonColors(
-                        disabledContainerColor = if (currentPage == qoran.surahNumber) MaterialTheme.colorScheme.primaryContainer
+                        disabledContainerColor = if (equalIndicator) MaterialTheme.colorScheme.primaryContainer
                         else Color.Transparent,
-                        disabledContentColor = if (currentPage == qoran.surahNumber) MaterialTheme.colorScheme.primary
+                        disabledContentColor = if (equalIndicator) MaterialTheme.colorScheme.primary
                         else Color.Transparent
                     )
                 ) {
@@ -119,19 +133,5 @@ fun DrawerHeader(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PrevHead() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        DrawerHeader(
-            currentIndex = 1,
-            indexList = emptyList(),
-            onIndexClick = {},
-            navigateToSearchAyah = { /*TODO*/ },
-            currentPage = 1
-        )
     }
 }

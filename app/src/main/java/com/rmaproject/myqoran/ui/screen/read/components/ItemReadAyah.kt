@@ -1,6 +1,5 @@
 package com.rmaproject.myqoran.ui.screen.read.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayCircle
@@ -22,7 +21,9 @@ fun ItemReadAyah(
     ayahText: String?,
     ayahTranslate: String?,
     modifier: Modifier = Modifier,
-    isRead: Boolean = true
+    isRead: Boolean = true,
+    footNote: String = "",
+    onTranslateClick: (String) -> Unit = {},
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -44,7 +45,7 @@ fun ItemReadAyah(
                 SpannableText(
                     text = ayahTranslate ?: "",
                     onClick = {
-                        Log.d("CLICK", it)
+                        onTranslateClick(footNote)
                     },
                 )
             }
@@ -143,30 +144,3 @@ fun ItemSurahCard(
         }
     }
 }
-
-//@Composable
-//fun ClickableTextTranslate(
-//    ayahTranslate: String?,
-//    onClick: ()-> Unit,
-//    modifier: Modifier = Modifier
-//) {
-//    val pattern = Pattern.compile("""\d""", Pattern.CASE_INSENSITIVE)
-//    val matcher = pattern.matcher(ayahTranslate ?: "")
-//    val annotatedString = buildAnnotatedString {
-//        while (matcher.find()) {
-//            withStyle(
-//                style = SpanStyle(color = MaterialTheme.colorScheme.primary)
-//            ) {
-//                append()
-//            }
-//        }
-//    }
-//    ClickableText(
-//        modifier = modifier,
-//        text = annotatedString,
-//        style = MaterialTheme.typography.bodyLarge,
-//        onClick = { offset ->
-//
-//        }
-//    )
-//}

@@ -26,7 +26,7 @@ fun FootNotesBottomSheet(
             modifier = Modifier.fillMaxWidth()
         ) {
             IconButton(
-                modifier = Modifier.align(Alignment.TopEnd),
+                modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
                 onClick = { hideBottomSheet() }
             ) {
                 Icon(Icons.Default.Close, contentDescription = "Close Footnote")

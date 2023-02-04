@@ -64,6 +64,7 @@ fun ReadQoranScreen(
     val qoranAyahList = viewModel.qoranState.value.listAyah
     val playType = viewModel.playerType
     val isPlayerPlaying = viewModel.isPlayerPlaying.value
+    val footNotesState = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         scope.launch {
@@ -155,7 +156,7 @@ fun ReadQoranScreen(
                 sheetBackgroundColor = MaterialTheme.colorScheme.surface,
                 sheetContent = {
                     FootNotesBottomSheet(
-                        footNotesContent = "Hello World!",
+                        footNotesContent = footNotesState.value,
                         hideBottomSheet = { scope.launch { bottomSheetState.hide() } }
                     )
                 }
@@ -272,7 +273,12 @@ fun ReadQoranScreen(
                                     )
                                     ItemReadAyah(
                                         ayahText = qoran.ayahText,
-                                        ayahTranslate = qoran.translation_id
+                                        ayahTranslate = qoran.translation_id,
+                                        footNote = qoran.footnotes_id ?: "",
+                                        onTranslateClick = { footNotes ->
+                                            footNotesState.value = footNotes
+                                            scope.launch { bottomSheetState.show() }
+                                        }
                                     )
                                     Spacer(modifier = Modifier.height(12.dp))
                                     with(LastReadPreferences) {

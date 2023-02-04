@@ -2,9 +2,9 @@ package com.rmaproject.myqoran.ui.screen.read.components
 
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.style.TextOverflow
 
@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 fun SpannableText(
     text: String,
     modifier: Modifier = Modifier,
-    spanStyle: SpanStyle = SpanStyle(color = Color.Blue),
+    spanStyle: SpanStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
     style: TextStyle = LocalTextStyle.current,
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
@@ -22,7 +22,7 @@ fun SpannableText(
     onClick: (String) -> Unit,
 ) {
 
-    val annotatedString = buildSpannable(text, spanStyle, true)
+    val annotatedString = buildSpannable(text, spanStyle)
 
     ClickableText(
         text = annotatedString,
@@ -33,7 +33,7 @@ fun SpannableText(
         maxLines,
         onTextLayout,
         onClick = { offset ->
-            text.split("""\d+""".toRegex()).forEach { tag ->
+            text.split(" ").forEach { tag ->
                 annotatedString.getStringAnnotations(tag, offset, offset).firstOrNull()?.let {
                     onClick.invoke(it.item)
                 }
@@ -45,15 +45,14 @@ fun SpannableText(
 private fun buildSpannable(
     text: String,
     spanStyle: SpanStyle,
-    isClickable: Boolean
 ) = buildAnnotatedString {
     text.split(" ").forEach {
-        if (it.contains("""\d+""".toRegex())) {
-            if (isClickable) pushStringAnnotation(it, it)
+        if ("""\d""".toRegex().containsMatchIn(it)) {
+            pushStringAnnotation(it, it)
             withStyle(style = spanStyle) {
                 append("$it ")
             }
-            if (isClickable) pop()
+            pop()
         } else {
             append("$it ")
         }
