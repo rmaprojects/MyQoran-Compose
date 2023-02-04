@@ -3,6 +3,7 @@ package com.rmaproject.myqoran.ui.screen.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -26,11 +27,13 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.rmaproject.myqoran.R
+import com.rmaproject.myqoran.components.FastScrollItem
 import com.rmaproject.myqoran.components.MyQoranHomeAppBar
 import com.rmaproject.myqoran.data.kotpref.LastReadPreferences
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.components.*
 import kotlinx.coroutines.launch
+import my.nanihadesuka.compose.LazyColumnScrollbar
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -48,12 +51,16 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
 
+    val surahScrollState = rememberLazyListState()
+    val juzScrollState = rememberLazyListState()
+    val pageScrollState = rememberLazyListState()
+
     val surahState = viewModel.surahState.value
     val juzState = viewModel.juzState.value
     val pageState = viewModel.pageState.value
 
     LaunchedEffect(surahState) {
-        sharedViewModel.setTotalAyah(surahState.surahList)
+        surahState.surahList?.let { sharedViewModel.setTotalAyah(it) }
     }
 
     Scaffold(
@@ -89,7 +96,10 @@ fun HomeScreen(
                         icon = Icons.Default.History,
                         cardDescription =
                         if (LastReadPreferences.surahName == null) stringResource(R.string.txt_desc_no_last_read)
-                        else stringResource(R.string.txt_desc_continue_read, "\n${LastReadPreferences.surahName}: ${LastReadPreferences.ayahNumber}"),
+                        else stringResource(
+                            R.string.txt_desc_continue_read,
+                            "\n${LastReadPreferences.surahName}: ${LastReadPreferences.ayahNumber}"
+                        ),
                         onClick = navigateLastRead
                     )
                     HeaderCard(
@@ -142,63 +152,105 @@ fun HomeScreen(
                 ) { currentPage ->
                     when (currentPage) {
                         ORDER_BY_SURAH -> {
-                            LazyColumn(
-                                modifier = Modifier.offset(currentPageOffset.dp),
+                            LazyColumnScrollbar(
+                                listState = surahScrollState,
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                indicatorContent = { position, _ ->
+                                    if (!surahState.surahList.isNullOrEmpty())
+                                        FastScrollItem(
+                                            text = surahState.surahList[position].surahNameEN ?: ""
+                                        )
+                                },
                             ) {
-                                items(
-                                    surahState.surahList,
-                                    key = { it.id!! }
-                                ) { surah ->
-                                    SurahCardItem(
-                                        ayahNumber = surah.surahNumber!!,
-                                        surahName = surah.surahNameEN!!,
-                                        surahNameId = surah.surahNameID!!,
-                                        surahNameAr = surah.surahNameArabic!!,
-                                        navigateToReadQoran = {
-                                            navigateToReadQoran(
-                                                ORDER_BY_SURAH,
-                                                surah.surahNumber, null, null
-                                            )
-                                        }
-                                    )
+                                LazyColumn(
+                                    state = surahScrollState,
+                                    modifier = Modifier.offset(currentPageOffset.dp),
+                                ) {
+                                    items(
+                                        surahState.surahList ?: emptyList(),
+                                        key = { it.id!! }
+                                    ) { surah ->
+                                        SurahCardItem(
+                                            ayahNumber = surah.surahNumber!!,
+                                            surahName = surah.surahNameEN!!,
+                                            surahNameId = surah.surahNameID!!,
+                                            surahNameAr = surah.surahNameArabic!!,
+                                            navigateToReadQoran = {
+                                                navigateToReadQoran(
+                                                    ORDER_BY_SURAH,
+                                                    surah.surahNumber, null, null
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
                         ORDER_BY_JUZ -> {
-                            LazyColumn(
-                                modifier = Modifier.offset(currentPageOffset.dp)
-                            ) {
-                                items(juzState.juzList) { juz ->
-                                    JuzCardItem(
-                                        juzNumber = juz.juzNumber!!,
-                                        navigateToReadQoran = {
-                                            navigateToReadQoran(
-                                                ORDER_BY_JUZ,
-                                                null,
-                                                juz.juzNumber,
-                                                null
+                            LazyColumnScrollbar(
+                                listState = juzScrollState,
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                indicatorContent = { position, _ ->
+                                    if (!juzState.juzList.isNullOrEmpty())
+                                        FastScrollItem(
+                                            text = stringResource(
+                                                id = R.string.txt_juz,
+                                                juzState.juzList[position].juzNumber ?: 1
                                             )
-                                        }
-                                    )
+                                        )
+                                }
+                            ) {
+                                LazyColumn(
+                                    state = juzScrollState,
+                                    modifier = Modifier.offset(currentPageOffset.dp)
+                                ) {
+                                    items(juzState.juzList ?: emptyList()) { juz ->
+                                        JuzCardItem(
+                                            juzNumber = juz.juzNumber!!,
+                                            navigateToReadQoran = {
+                                                navigateToReadQoran(
+                                                    ORDER_BY_JUZ,
+                                                    null,
+                                                    juz.juzNumber,
+                                                    null
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
                         ORDER_BY_PAGE -> {
-                            LazyColumn(
-                                modifier = Modifier.offset(currentPageOffset.dp)
-                            ) {
-                                items(pageState.qoranByPageList) { qoranByPage ->
-                                    PageCardItem(
-                                        pageNumber = qoranByPage.pageNumber!!,
-                                        navigateToReadQoran = {
-                                            navigateToReadQoran(
-                                                ORDER_BY_PAGE,
-                                                null,
-                                                null,
-                                                qoranByPage.pageNumber
+                            LazyColumnScrollbar(
+                                listState = pageScrollState,
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                indicatorContent = { position, _ ->
+                                    if (!pageState.qoranByPageList.isNullOrEmpty())
+                                        FastScrollItem(
+                                            text = stringResource(
+                                                id = R.string.txt_page,
+                                                pageState.qoranByPageList[position].pageNumber ?: 1
                                             )
-                                        }
-                                    )
+                                        )
+                                }
+                            ) {
+                                LazyColumn(
+                                    state = pageScrollState,
+                                    modifier = Modifier.offset(currentPageOffset.dp)
+                                ) {
+                                    items(pageState.qoranByPageList ?: emptyList()) { qoranByPage ->
+                                        PageCardItem(
+                                            pageNumber = qoranByPage.pageNumber!!,
+                                            navigateToReadQoran = {
+                                                navigateToReadQoran(
+                                                    ORDER_BY_PAGE,
+                                                    null,
+                                                    null,
+                                                    qoranByPage.pageNumber
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }

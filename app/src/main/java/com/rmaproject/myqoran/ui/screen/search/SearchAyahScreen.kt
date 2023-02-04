@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rmaproject.myqoran.R
+import com.rmaproject.myqoran.components.FastScrollItem
 import com.rmaproject.myqoran.components.MyQoranAppBar
 import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
 import com.rmaproject.myqoran.data.local.entities.Qoran
@@ -29,6 +31,7 @@ import com.rmaproject.myqoran.ui.screen.search.components.SearchField
 import com.rmaproject.myqoran.ui.screen.search.event.SearchEvent
 import com.rmaproject.myqoran.ui.screen.search.event.SearchUiState
 import com.rmaproject.myqoran.utils.Converters
+import my.nanihadesuka.compose.LazyColumnScrollbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -138,52 +141,64 @@ fun SearchAyahContent(
             }
         }
         is SearchUiState.NotEmpty -> {
-            LazyColumn(
-                modifier = Modifier.padding(8.dp),
+            val lazyColumnState = rememberLazyListState()
+            LazyColumnScrollbar(
+                listState = lazyColumnState,
+                thumbColor = MaterialTheme.colorScheme.primary,
+                indicatorContent = { position, _ ->
+                    FastScrollItem(
+                        text = "${state.data[position].surahNameEn}: ${state.data[position].ayahNumber}"
+                    )
+                }
             ) {
-                items(state.data) { qoran ->
-                    ReadControlPanel(
-                        ayahNumber = qoran.ayahNumber!!,
-                        onPlayAyahClick = {},
-                        onBookmarkAyahClick = {},
-                        onCopyAyahClick = {
-                            copyAyah(
-                                qoran.surahNameEn!!,
-                                qoran.ayahText!!,
-                                if (SettingsPreferences.currentLanguage
-                                    == SettingsPreferences.INDONESIAN
-                                ) {
-                                    qoran.translation_id ?: ""
-                                }
-                                else {
-                                    Converters.adaptEnTranslation(qoran.translation_en ?: "")
-                                }
-                            )
-                        },
-                        onShareAyahClick = {
-                            shareAyah(
-                                qoran.surahNameEn!!,
-                                qoran.ayahText!!,
-                                if (SettingsPreferences.currentLanguage
-                                    == SettingsPreferences.INDONESIAN
-                                ) qoran.translation_id ?: ""
-                                else qoran.translation_en ?: ""
-                            )
-                        },
-                        isOnSearch = true,
-                        surahName = qoran.surahNameEn!!
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    ItemReadAyah(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        ayahText = Converters.applyTajweed(context, qoran.ayahText!!),
-                        ayahTranslate = if (SettingsPreferences.currentLanguage
-                            == SettingsPreferences.INDONESIAN
-                        ) qoran.translation_id ?: ""
-                        else qoran.translation_en ?: "",
-                        isRead = false
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
+                LazyColumn(
+                    state = lazyColumnState,
+                    modifier = Modifier.padding(8.dp),
+                ) {
+                    items(state.data) { qoran ->
+                        ReadControlPanel(
+                            ayahNumber = qoran.ayahNumber!!,
+                            onPlayAyahClick = {},
+                            onBookmarkAyahClick = {},
+                            onCopyAyahClick = {
+                                copyAyah(
+                                    qoran.surahNameEn!!,
+                                    qoran.ayahText!!,
+                                    if (SettingsPreferences.currentLanguage
+                                        == SettingsPreferences.INDONESIAN
+                                    ) {
+                                        qoran.translation_id ?: ""
+                                    }
+                                    else {
+                                        Converters.adaptEnTranslation(qoran.translation_en ?: "")
+                                    }
+                                )
+                            },
+                            onShareAyahClick = {
+                                shareAyah(
+                                    qoran.surahNameEn!!,
+                                    qoran.ayahText!!,
+                                    if (SettingsPreferences.currentLanguage
+                                        == SettingsPreferences.INDONESIAN
+                                    ) qoran.translation_id ?: ""
+                                    else qoran.translation_en ?: ""
+                                )
+                            },
+                            isOnSearch = true,
+                            surahName = qoran.surahNameEn!!
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        ItemReadAyah(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            ayahText = Converters.applyTajweed(context, qoran.ayahText!!),
+                            ayahTranslate = if (SettingsPreferences.currentLanguage
+                                == SettingsPreferences.INDONESIAN
+                            ) qoran.translation_id ?: ""
+                            else qoran.translation_en ?: "",
+                            isRead = false
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
             }
         }

@@ -26,6 +26,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.rmaproject.myqoran.R
+import com.rmaproject.myqoran.components.FastScrollItem
 import com.rmaproject.myqoran.data.kotpref.LastReadPreferences
 import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
@@ -40,6 +41,7 @@ import com.rmaproject.myqoran.utils.Converters
 import com.rmaproject.myqoran.utils.GlobalState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import my.nanihadesuka.compose.LazyColumnScrollbar
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -217,11 +219,15 @@ fun ReadQoranScreen(
                                     onClick = {
                                         when (playType.value) {
                                             ReadQoranViewModel.PlayType.NONE -> {
-                                                viewModel.onEvent(
+                                                qoranAyahList?.let {
                                                     ReadQoranEvent.PlayAllAyah(
-                                                        qoranAyahList
+                                                        it
                                                     )
-                                                )
+                                                }?.let {
+                                                    viewModel.onEvent(
+                                                        it
+                                                    )
+                                                }
                                             }
                                             ReadQoranViewModel.PlayType.PLAY_ALL -> {
                                                 viewModel.onPlayAyahEvent(
@@ -256,108 +262,126 @@ fun ReadQoranScreen(
                             state = pagerState,
                             userScrollEnabled = false
                         ) {
-                            LazyColumn(
-                                contentPadding = PaddingValues(12.dp),
-                                state = lazyColumnState
-                            ) {
-                                items(
-                                    qoranAyahList.size
-                                ) { index ->
-                                    val qoran = qoranAyahList[index]
-                                    if (qoran.ayahNumber == 1) {
-                                        ItemSurahCard(
-                                            modifier = Modifier.padding(vertical = 12.dp),
-                                            surahName = qoran.surahNameEn!!,
-                                            surahNameAr = qoran.surahNameAr!!,
-                                            totalAyah = totalAyahs?.get(index)!!,
-                                            descendPlace = qoran.surahDescendPlace!!,
+                            LazyColumnScrollbar(
+                                listState = lazyColumnState,
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                indicatorContent = { position, _ ->
+                                    if (!qoranAyahList.isNullOrEmpty())
+                                        FastScrollItem(
+                                            text = "${qoranAyahList[position].surahNameEn}: ${qoranAyahList[position].ayahNumber}"
                                         )
-                                    }
-                                    if (!GlobalState.isFocusRead) {
-                                        ReadControlPanel(
-                                            modifier = Modifier.padding(vertical = 8.dp),
-                                            ayahNumber = qoran.ayahNumber!!,
-                                            onPlayAyahClick = {
-                                                viewModel.onEvent(
-                                                    ReadQoranEvent.PlayAyah(
-                                                        ayahNumber = qoran.ayahNumber,
-                                                        surahNumber = qoran.surahNumber!!,
-                                                        surahName = qoran.surahNameEn!!
-                                                    )
-                                                )
-                                            },
-                                            onCopyAyahClick = {
-                                                viewModel.onEvent(
-                                                    ReadQoranEvent.CopyAyah(
-                                                        context,
-                                                        surahName = qoran.surahNameEn ?: "",
-                                                        ayahText = qoran.ayahText ?: "",
-                                                        translation = if (SettingsPreferences.currentLanguage
-                                                            == SettingsPreferences.INDONESIAN
-                                                        ) qoran.translation_id ?: ""
-                                                        else qoran.translation_en ?: ""
-                                                    )
-                                                )
-                                            },
-                                            onShareAyahClick = {
-                                                viewModel.onEvent(
-                                                    ReadQoranEvent.ShareAyah(
-                                                        context,
-                                                        surahName = qoran.surahNameEn ?: "",
-                                                        ayahText = qoran.ayahText ?: "",
-                                                        translation = if (SettingsPreferences.currentLanguage
-                                                            == SettingsPreferences.INDONESIAN
-                                                        ) qoran.translation_id ?: ""
-                                                        else qoran.translation_en ?: ""
-                                                    )
-                                                )
-                                            },
-                                            onBookmarkAyahClick = {
-                                                viewModel.onEvent(
-                                                    ReadQoranEvent.SaveBookmark(
-                                                        surahName = qoran.surahNameEn!!,
-                                                        surahNumber = qoran.surahNumber,
-                                                        ayahNumber = qoran.ayahNumber,
-                                                        juzNumber = qoran.juzNumber,
-                                                        pageNumber = qoran.page,
-                                                        position = index,
-                                                        qoranTextAr = qoran.ayahText!!,
-                                                        indexType = viewModel.indexType
-                                                    )
+                                }
+                            ) {
+                                LazyColumn(
+                                    contentPadding = PaddingValues(12.dp),
+                                    state = lazyColumnState
+                                ) {
+                                    items(
+                                        qoranAyahList?.size ?: 0
+                                    ) { index ->
+                                        if (!qoranAyahList.isNullOrEmpty()) {
+                                            val qoran = qoranAyahList[index]
+                                            if (qoran.ayahNumber == 1) {
+                                                ItemSurahCard(
+                                                    modifier = Modifier.padding(vertical = 12.dp),
+                                                    surahName = qoran.surahNameEn!!,
+                                                    surahNameAr = qoran.surahNameAr!!,
+                                                    totalAyah = totalAyahs?.get(index)!!,
+                                                    descendPlace = qoran.surahDescendPlace!!,
                                                 )
                                             }
-                                        )
-                                    }
-                                    ItemReadAyah(
-                                        ayahText = Converters.applyTajweed(context, qoran.ayahText!!),
-                                        ayahTranslate = if (SettingsPreferences.currentLanguage
-                                            == SettingsPreferences.INDONESIAN
-                                        ) {
-                                            qoran.translation_id ?: ""
-                                        } else {
-                                            Converters.adaptEnTranslation(qoran.translation_en ?: "")
-                                        },
-                                        footNote = if (SettingsPreferences.currentLanguage
-                                            == SettingsPreferences.INDONESIAN
-                                        ) {
-                                            qoran.footnotes_id ?: ""
-                                        } else {
-                                            qoran.footnotes_en ?: ""
-                                        },
-                                        onTranslateClick = { footNotes ->
-                                            footNotesState.value = footNotes
-                                            scope.launch { bottomSheetState.show() }
+                                            if (!GlobalState.isFocusRead) {
+                                                ReadControlPanel(
+                                                    modifier = Modifier.padding(vertical = 8.dp),
+                                                    ayahNumber = qoran.ayahNumber!!,
+                                                    onPlayAyahClick = {
+                                                        viewModel.onEvent(
+                                                            ReadQoranEvent.PlayAyah(
+                                                                ayahNumber = qoran.ayahNumber,
+                                                                surahNumber = qoran.surahNumber!!,
+                                                                surahName = qoran.surahNameEn!!
+                                                            )
+                                                        )
+                                                    },
+                                                    onCopyAyahClick = {
+                                                        viewModel.onEvent(
+                                                            ReadQoranEvent.CopyAyah(
+                                                                context,
+                                                                surahName = qoran.surahNameEn ?: "",
+                                                                ayahText = qoran.ayahText ?: "",
+                                                                translation = if (SettingsPreferences.currentLanguage
+                                                                    == SettingsPreferences.INDONESIAN
+                                                                ) qoran.translation_id ?: ""
+                                                                else qoran.translation_en ?: ""
+                                                            )
+                                                        )
+                                                    },
+                                                    onShareAyahClick = {
+                                                        viewModel.onEvent(
+                                                            ReadQoranEvent.ShareAyah(
+                                                                context,
+                                                                surahName = qoran.surahNameEn ?: "",
+                                                                ayahText = qoran.ayahText ?: "",
+                                                                translation = if (SettingsPreferences.currentLanguage
+                                                                    == SettingsPreferences.INDONESIAN
+                                                                ) qoran.translation_id ?: ""
+                                                                else qoran.translation_en ?: ""
+                                                            )
+                                                        )
+                                                    },
+                                                    onBookmarkAyahClick = {
+                                                        viewModel.onEvent(
+                                                            ReadQoranEvent.SaveBookmark(
+                                                                surahName = qoran.surahNameEn!!,
+                                                                surahNumber = qoran.surahNumber,
+                                                                ayahNumber = qoran.ayahNumber,
+                                                                juzNumber = qoran.juzNumber,
+                                                                pageNumber = qoran.page,
+                                                                position = index,
+                                                                qoranTextAr = qoran.ayahText!!,
+                                                                indexType = viewModel.indexType
+                                                            )
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                            ItemReadAyah(
+                                                ayahText = Converters.applyTajweed(
+                                                    context,
+                                                    qoran.ayahText!!
+                                                ),
+                                                ayahTranslate = if (SettingsPreferences.currentLanguage
+                                                    == SettingsPreferences.INDONESIAN
+                                                ) {
+                                                    qoran.translation_id ?: ""
+                                                } else {
+                                                    Converters.adaptEnTranslation(
+                                                        qoran.translation_en ?: ""
+                                                    )
+                                                },
+                                                footNote = if (SettingsPreferences.currentLanguage
+                                                    == SettingsPreferences.INDONESIAN
+                                                ) {
+                                                    qoran.footnotes_id ?: ""
+                                                } else {
+                                                    qoran.footnotes_en ?: ""
+                                                },
+                                                onTranslateClick = { footNotes ->
+                                                    footNotesState.value = footNotes
+                                                    scope.launch { bottomSheetState.show() }
+                                                }
+                                            )
+                                            Spacer(modifier = Modifier.height(12.dp))
+                                            with(LastReadPreferences) {
+                                                surahName = qoran.surahNameEn!!
+                                                surahNumber = qoran.surahNumber ?: 0
+                                                ayahNumber = qoran.ayahNumber ?: 1
+                                                juzNumber = qoran.juzNumber ?: 0
+                                                pageNumber = qoran.page ?: 0
+                                                indexType = viewModel.indexType
+                                                lastPosition = index
+                                            }
                                         }
-                                    )
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                    with(LastReadPreferences) {
-                                        surahName = qoran.surahNameEn!!
-                                        surahNumber = qoran.surahNumber ?: 0
-                                        ayahNumber = qoran.ayahNumber ?: 1
-                                        juzNumber = qoran.juzNumber ?: 0
-                                        pageNumber = qoran.page ?: 0
-                                        indexType = viewModel.indexType
-                                        lastPosition = index
                                     }
                                 }
                             }

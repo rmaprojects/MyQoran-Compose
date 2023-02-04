@@ -3,6 +3,7 @@ package com.rmaproject.myqoran.ui.screen.search
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rmaproject.myqoran.R
+import com.rmaproject.myqoran.components.FastScrollItem
 import com.rmaproject.myqoran.components.MyQoranAppBar
 import com.rmaproject.myqoran.data.local.entities.SearchSurahResult
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_SURAH
@@ -25,6 +27,7 @@ import com.rmaproject.myqoran.ui.screen.home.components.SurahCardItem
 import com.rmaproject.myqoran.ui.screen.search.components.SearchField
 import com.rmaproject.myqoran.ui.screen.search.event.SearchEvent
 import com.rmaproject.myqoran.ui.screen.search.event.SearchUiState
+import my.nanihadesuka.compose.LazyColumnScrollbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +89,7 @@ fun SearchSurahContent(
     navigateToReadQoran: (Int, Int?, Int?, Int?) -> Unit,
     state: SearchUiState<List<SearchSurahResult>>,
 ) {
+    val lazyColumnState = rememberLazyListState()
     when (state) {
         is SearchUiState.Empty -> {
             Box(
@@ -112,25 +116,37 @@ fun SearchSurahContent(
             }
         }
         is SearchUiState.NotEmpty -> {
-            LazyColumn {
-                itemsIndexed(
-                    items = state.data
-                ) { index, surah ->
-                    SurahCardItem(
-                        modifier = Modifier.padding(8.dp),
-                        ayahNumber = index + 1,
-                        surahName = surah.surahNameEn!!,
-                        surahNameId = surah.surahNameId!!,
-                        surahNameAr = surah.surahNameAr!!,
-                        navigateToReadQoran = {
-                            navigateToReadQoran(
-                                ORDER_BY_SURAH,
-                                surah.surahNumber,
-                                null,
-                                null
-                            )
-                        }
+            LazyColumnScrollbar(
+                listState = lazyColumnState,
+                thumbColor = MaterialTheme.colorScheme.primary,
+                indicatorContent = { position, _ ->
+                    FastScrollItem(
+                        text = "${state.data[position].surahNumber}. ${state.data[position].surahNameEn}"
                     )
+                }
+            ) {
+                LazyColumn(
+                    state = lazyColumnState
+                ) {
+                    itemsIndexed(
+                        items = state.data
+                    ) { index, surah ->
+                        SurahCardItem(
+                            modifier = Modifier.padding(8.dp),
+                            ayahNumber = index + 1,
+                            surahName = surah.surahNameEn!!,
+                            surahNameId = surah.surahNameId!!,
+                            surahNameAr = surah.surahNameAr!!,
+                            navigateToReadQoran = {
+                                navigateToReadQoran(
+                                    ORDER_BY_SURAH,
+                                    surah.surahNumber,
+                                    null,
+                                    null
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

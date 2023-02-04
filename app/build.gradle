@@ -110,6 +110,9 @@ dependencies {
 
     //AgentWeb
     implementation 'com.github.Justson.AgentWeb:agentweb-core:v4.1.9-androidx'
+
+    //FastScroll
+    implementation 'com.github.nanihadesuka:LazyColumnScrollbar:1.5.1'
 }
 
 kapt {
