@@ -27,4 +27,8 @@
     <string name="txt_cancel">Batal</string>
     <string name="txt_desc_focus_read">Hilangkan terjemah dan menu agar fokus membaca</string>
     <string name="txt_focus_read">Mode Fokus Baca</string>
+    <string name="txt_select_surah">Pilih Surat</string>
+    <string name="txt_select_juz">Pilih Juz</string>
+    <string name="txt_select_page">Pilih Halaman</string>
+    <string name="txt_many_ayah">%1$s Ayah(s)</string>
 </resources>

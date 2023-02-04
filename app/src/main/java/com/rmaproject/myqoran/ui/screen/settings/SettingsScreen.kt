@@ -136,7 +136,7 @@ fun SettingsScreen(
             )
             MyQoranAlertDialog(
                 icon = Icons.Default.Language,
-                title = stringResource(id = R.string.txt_choose_reciter),
+                title = stringResource(id = R.string.txt_change_language),
                 actionItemList = actionList,
                 dismissButtonText = stringResource(R.string.txt_cancel),
                 onDismissClick = { isDialogForLanguageShown = false },
