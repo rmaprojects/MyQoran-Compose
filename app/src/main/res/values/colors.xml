@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="color_ghunna">#9c404b</color>
+    <color name="color_qalqala">#552fff</color>
+    <color name="color_iqlab">#006684</color>
+    <color name="color_idgham">#ad3130</color>
+    <color name="color_idghamwo">#8c4382</color>
+    <color name="color_ikhfa">#2b6c00</color>
 </resources>

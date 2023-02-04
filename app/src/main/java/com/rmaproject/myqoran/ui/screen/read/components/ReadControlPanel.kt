@@ -126,18 +126,3 @@ fun ReadControlPanel(
         }
     }
 }
-
-
-@Preview
-@Composable
-fun ReadControlPanelPreview() {
-    ReadControlPanel(
-        1,
-        {},
-        {},
-        {},
-        {},
-        isOnSearch = false,
-        surahName = "Alfatihah"
-    )
-}

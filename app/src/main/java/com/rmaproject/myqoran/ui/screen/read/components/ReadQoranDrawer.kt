@@ -12,9 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.data.local.entities.Qoran
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_JUZ
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_PAGE
@@ -75,14 +77,14 @@ fun DrawerHeader(
                 modifier = Modifier.align(Alignment.TopStart),
                 onClick = navigateToSearchAyah,
             ) {
-                Icon(Icons.Default.Search, contentDescription = "Search Ayah")
+                Icon(Icons.Default.Search, contentDescription = stringResource(id = R.string.txt_search_ayah))
             }
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = when (currentIndex) {
-                    ORDER_BY_SURAH -> "Pilih Surat"
-                    ORDER_BY_JUZ -> "Pilih Juz"
-                    ORDER_BY_PAGE -> "Pilih Halaman"
+                    ORDER_BY_SURAH -> stringResource(R.string.txt_select_surah)
+                    ORDER_BY_JUZ -> stringResource(R.string.txt_select_juz)
+                    ORDER_BY_PAGE -> stringResource(R.string.txt_select_page)
                     else -> throw Exception("Unknown Index")
                 },
                 style = MaterialTheme.typography.headlineSmall,
@@ -124,8 +126,8 @@ fun DrawerHeader(
                     Text(
                         text = when (currentIndex) {
                             ORDER_BY_SURAH -> qoran.surahNameEn!!
-                            ORDER_BY_JUZ -> "Juz ${qoran.juzNumber}"
-                            ORDER_BY_PAGE -> "Halaman ${qoran.page}"
+                            ORDER_BY_JUZ -> stringResource(id = R.string.txt_juz, "${qoran.juzNumber}")
+                            ORDER_BY_PAGE -> stringResource(id = R.string.txt_page, "${qoran.page}")
                             else -> throw Exception("Unknown Order")
                         },
                         textAlign = TextAlign.Center

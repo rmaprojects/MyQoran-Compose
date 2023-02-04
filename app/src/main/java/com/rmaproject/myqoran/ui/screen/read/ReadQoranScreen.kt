@@ -36,6 +36,7 @@ import com.rmaproject.myqoran.ui.screen.read.components.*
 import com.rmaproject.myqoran.ui.screen.read.events.PlayAyahEvent
 import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranEvent
 import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranUiEvent
+import com.rmaproject.myqoran.utils.Converters
 import com.rmaproject.myqoran.utils.GlobalState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -328,13 +329,13 @@ fun ReadQoranScreen(
                                         )
                                     }
                                     ItemReadAyah(
-                                        ayahText = qoran.ayahText,
+                                        ayahText = Converters.applyTajweed(context, qoran.ayahText!!),
                                         ayahTranslate = if (SettingsPreferences.currentLanguage
                                             == SettingsPreferences.INDONESIAN
                                         ) {
                                             qoran.translation_id ?: ""
                                         } else {
-                                            qoran.translation_en ?: ""
+                                            Converters.adaptEnTranslation(qoran.translation_en ?: "")
                                         },
                                         footNote = if (SettingsPreferences.currentLanguage
                                             == SettingsPreferences.INDONESIAN

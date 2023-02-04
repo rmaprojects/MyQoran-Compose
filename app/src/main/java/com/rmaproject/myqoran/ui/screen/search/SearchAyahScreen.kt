@@ -1,5 +1,6 @@
 package com.rmaproject.myqoran.ui.screen.search
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,6 +28,7 @@ import com.rmaproject.myqoran.ui.screen.read.events.ReadQoranEvent
 import com.rmaproject.myqoran.ui.screen.search.components.SearchField
 import com.rmaproject.myqoran.ui.screen.search.event.SearchEvent
 import com.rmaproject.myqoran.ui.screen.search.event.SearchUiState
+import com.rmaproject.myqoran.utils.Converters
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,7 +96,8 @@ fun SearchAyahScreen(
                                     translation
                                 )
                             )
-                        }
+                        },
+                        context = context
                     )
                 }
         }
@@ -105,7 +108,8 @@ fun SearchAyahScreen(
 fun SearchAyahContent(
     state: SearchUiState<List<Qoran>>,
     copyAyah: (String, String, String) -> Unit,
-    shareAyah: (String, String, String) -> Unit
+    shareAyah: (String, String, String) -> Unit,
+    context: Context
 ) {
     when (state) {
         is SearchUiState.Empty -> {
@@ -147,8 +151,12 @@ fun SearchAyahContent(
                                 qoran.ayahText!!,
                                 if (SettingsPreferences.currentLanguage
                                     == SettingsPreferences.INDONESIAN
-                                ) qoran.translation_id ?: ""
-                                else qoran.translation_en ?: ""
+                                ) {
+                                    qoran.translation_id ?: ""
+                                }
+                                else {
+                                    Converters.adaptEnTranslation(qoran.translation_en ?: "")
+                                }
                             )
                         },
                         onShareAyahClick = {
@@ -167,7 +175,7 @@ fun SearchAyahContent(
                     Spacer(modifier = Modifier.height(8.dp))
                     ItemReadAyah(
                         modifier = Modifier.padding(vertical = 8.dp),
-                        ayahText = qoran.ayahText,
+                        ayahText = Converters.applyTajweed(context, qoran.ayahText!!),
                         ayahTranslate = if (SettingsPreferences.currentLanguage
                             == SettingsPreferences.INDONESIAN
                         ) qoran.translation_id ?: ""
