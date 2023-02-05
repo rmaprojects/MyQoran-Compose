@@ -150,6 +150,9 @@ fun ReadQoranScreen(
             is ReadQoranUiEvent.PlayingAyahChanged -> {
                 scope.launch { lazyColumnState.animateScrollToItem(event.position) }
             }
+            is ReadQoranUiEvent.ErrorPlayingAyah -> {
+                scope.launch { snackbarHostState.showSnackbar(event.message) }
+            }
         }
     }
 

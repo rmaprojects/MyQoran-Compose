@@ -123,6 +123,11 @@ class ReadQoranViewModel @Inject constructor(
                     playerClient.playMode = PlayMode.SINGLE_ONCE
                     _currentPlayedAyah.value = "${event.surahName}: ${event.ayahNumber}"
                     playerType.value = PlayType.PLAY_SINGLE
+                    if (playerClient.isError) {
+                        viewModelScope.launch {
+                            _uiEventFlow.emit(ReadQoranUiEvent.ErrorPlayingAyah(playerClient.errorMessage))
+                        }
+                    }
                 }
             }
             is ReadQoranEvent.SaveBookmark -> {
@@ -177,6 +182,9 @@ class ReadQoranViewModel @Inject constructor(
                                     position
                                 )
                             )
+                            if (playerClient.isError) {
+                                _uiEventFlow.emit(ReadQoranUiEvent.ErrorPlayingAyah(playerClient.errorMessage))
+                            }
                         }
                     }
                 }
