@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class Qoran(
     @PrimaryKey val id: Int = 0,
     @ColumnInfo(name = "jozz") val juzNumber: Int? = 0,
-    @ColumnInfo(name = "sora") val surahNumber: Int? = 0, //Surah Number
+    @ColumnInfo(name = "sora") val surahNumber: Int? = 0,
     @ColumnInfo(name = "sora_name_en") val surahNameEn: String? = "",
     @ColumnInfo(name = "sora_name_ar") val surahNameAr: String? = "",
     @ColumnInfo(name = "page") val page: Int? = 0,

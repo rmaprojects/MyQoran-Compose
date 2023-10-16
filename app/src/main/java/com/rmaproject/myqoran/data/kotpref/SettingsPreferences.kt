@@ -21,6 +21,8 @@ object SettingsPreferences : KotprefModel() {
         isDarkMode = false
         currentLanguage = INDONESIAN
         ayahTextSize = SLIDER_DEF_VALUE
+        currentQoriOption = QoriOptions.ABD_SUDAIS
+        isFocusReadActive = false
     }
 
     enum class QoriOptions(
@@ -29,7 +31,7 @@ object SettingsPreferences : KotprefModel() {
     ) {
         ABD_SUDAIS(
             qoriName = "Abdurrahman As-Sudais",
-            url = "Abdurrahmaan_As-Sudais_64kbps"
+            url = "Abdurrahmaan_As-Sudais_64kbps",
         ),
         HUDHAIFY(
             qoriName = "Hudhaify",

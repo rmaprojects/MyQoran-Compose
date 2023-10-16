@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -18,7 +19,6 @@ import com.rmaproject.myqoran.BuildConfig
 import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.MyQoranHomeAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FindQiblaScreen(
     openDrawer: () -> Unit,
@@ -40,14 +40,15 @@ fun FindQiblaScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
         ) {
             AndroidView(
                 factory = { context ->
                     LinearLayout(context).apply {
                         layoutParams = ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
+                            ViewGroup.LayoutParams.MATCH_PARENT,
                         )
                         AgentWeb.with(activity)
                             .setAgentWebParent(this, this.layoutParams)

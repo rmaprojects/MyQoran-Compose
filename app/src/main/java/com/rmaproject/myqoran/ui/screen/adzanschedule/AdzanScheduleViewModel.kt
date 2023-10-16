@@ -1,13 +1,20 @@
 package com.rmaproject.myqoran.ui.screen.adzanschedule
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.data.repository.QoranRepository
 import com.rmaproject.myqoran.service.location.LocationClient
+import com.rmaproject.myqoran.service.location.LocationTrackerCondition
 import com.rmaproject.myqoran.ui.screen.adzanschedule.state.AdzanScheduleState
+import com.rmaproject.myqoran.ui.screen.adzanschedule.state.ErrorType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,41 +32,42 @@ class AdzanScheduleViewModel @Inject constructor(
         MutableStateFlow(CurrentLocation(0.0, 0.0))
     val currentLocation: StateFlow<CurrentLocation> = _currentLocation.asStateFlow()
 
-    init {
+    fun getLocationUpdates() {
         viewModelScope.launch {
-            locationClient.getLocationUpdates(1000L)
-                .catch { e ->
-                    e.printStackTrace()
-                    Log.d("ERR", e.toString())
-                    _adzanScheduleState.emit(
-                        AdzanScheduleState.Error(
-                            e.message ?: "Error Occurred"
-                        )
-                    )
-                }
-                .takeWhile { _adzanScheduleState.value is AdzanScheduleState.Idle }
-                .collect { location ->
-                    val latitude = location.latitude
-                    val longitude = location.longitude
-                    try {
-                        val response =
-                            repository.getAdzanSchedule(latitude.toString(), longitude.toString())
-                        _adzanScheduleState.emit(
-                            AdzanScheduleState.Success(response.times.first())
-                        )
-                        _currentLocation.value = CurrentLocation(
-                            latitude = latitude,
-                            longitude = longitude
-                        )
+            _adzanScheduleState.emit(AdzanScheduleState.Idle)
+            locationClient.getLocationUpdates()
+                .onEach { tracker ->
+                    when (tracker) {
+                        is LocationTrackerCondition.Error -> {
+                            _adzanScheduleState.emit(AdzanScheduleState.Error(ErrorType.OTHERS))
+                        }
 
-                    } catch (e: Exception) {
-                        _adzanScheduleState.emit(
-                            AdzanScheduleState.Error(
-                                e.localizedMessage ?: "Problem Occurred when fetching data"
+                        is LocationTrackerCondition.MissingPermission -> {
+                            _adzanScheduleState.emit(AdzanScheduleState.Error(ErrorType.PERMISSION_ERROR))
+                        }
+
+                        is LocationTrackerCondition.NoGps -> {
+                            _adzanScheduleState.emit(AdzanScheduleState.Error(ErrorType.NO_GPS))
+                        }
+
+                        is LocationTrackerCondition.Success -> {
+                            val latitude = tracker.location?.latitude
+                            val longitude = tracker.location?.longitude
+                            if (latitude == null || longitude == null) {
+                                _adzanScheduleState.emit(AdzanScheduleState.Error(ErrorType.OTHERS))
+                                return@onEach
+                            }
+                            _currentLocation.emit(CurrentLocation(longitude, latitude))
+                            val responseResult = repository.getAdzanSchedule(
+                                latitude.toString(),
+                                longitude.toString()
                             )
-                        )
+                            _adzanScheduleState.emit(AdzanScheduleState.Success(responseResult.times[0]))
+                            cancel()
+                        }
                     }
                 }
+                .launchIn(viewModelScope)
         }
     }
 

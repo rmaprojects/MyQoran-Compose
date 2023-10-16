@@ -5,11 +5,11 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -34,7 +34,7 @@ fun ReadControlPanel(
     }
 
     val rotationState by animateFloatAsState(
-        targetValue = if (isExpanded) 180f else 0f
+        targetValue = if (isExpanded) 180f else 0f, label = "Rotation"
     )
 
     ElevatedCard(

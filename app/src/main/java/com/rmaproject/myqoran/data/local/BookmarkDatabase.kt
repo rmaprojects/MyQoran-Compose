@@ -13,6 +13,6 @@ abstract class BookmarkDatabase: RoomDatabase() {
     abstract fun bookmarkDao(): BookmarkDao
 
     companion object {
-        const val DATABASE_NAME = "bookmark.db"
+        const val DATABASE_NAME = "bookmarknew.db"
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import com.rmaproject.myqoran.data.local.entities.Juz
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -55,6 +56,22 @@ object Converters {
         )
     }
 
+    fun List<Juz>.mapToJuzIndexing(): List<JuzWithSurahIndex> {
+        val groupedList = this.groupBy { it.juzNumber }
+        return groupedList.map { (juzNumber, juzList) ->
+            JuzWithSurahIndex(
+                juzNumber,
+                juzList.map { "${it.SurahName_en}: ${it.surahNumber}" },
+                juzList.map { it.surahNumber }
+            )
+        }
+    }
+
+    data class JuzWithSurahIndex(
+        val juzNumber: Int?,
+        val surahList: List<String?>,
+        val surahNumberList: List<Int?>
+    )
 }
 
 fun Spannable.toAnnotatedString(primaryColor: Color): AnnotatedString {

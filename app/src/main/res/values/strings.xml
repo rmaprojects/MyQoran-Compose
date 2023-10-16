@@ -33,4 +33,12 @@
     <string name="txt_select_juz">Select Juz</string>
     <string name="txt_question_delete_all_bookmark">Delete all bookmarks?</string>
     <string name="txt_warn_cannot_undo">This action cannot be undone</string>
+    <string name="txt_err_others">Error when getting Location</string>
+    <string name="txt_err_permission_missing">Please give this app permission for your location</string>
+    <string name="txt_err_gps_off">GPS is not Activated</string>
+    <string-array name="txt_tab_items">
+        <item>Surah</item>
+        <item>Juz</item>
+        <item>Page</item>
+    </string-array>
 </resources>

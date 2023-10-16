@@ -5,7 +5,7 @@ import androidx.room.DatabaseView
 import androidx.room.PrimaryKey
 
 @DatabaseView(
-    value = "SELECT sora, sora_name_ar, sora_name_en, sora_name_id, sora_name_emlaey, COUNT(id) as ayah_total, sora_descend_place FROM quran GROUP by sora",
+    value = "SELECT id, sora, sora_name_ar, sora_name_en, sora_name_id, sora_name_emlaey, COUNT(id) as ayah_total, sora_descend_place FROM quran GROUP by sora",
     viewName = "search_surah_result"
 )
 data class SearchSurahResult(

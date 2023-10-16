@@ -1,12 +1,16 @@
 package com.rmaproject.myqoran.ui.theme
 
 import android.os.Build
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 
-private val LightColors = lightColorScheme(
+private val lightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -39,7 +43,7 @@ private val LightColors = lightColorScheme(
 )
 
 
-private val DarkColors = darkColorScheme(
+private val darkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
@@ -82,8 +86,8 @@ fun MyQoranComposeTheme(
     val colors = when {
         useDynamicColors && useDarkTheme -> dynamicDarkColorScheme(LocalContext.current)
         useDynamicColors && !useDarkTheme -> dynamicLightColorScheme(LocalContext.current)
-        useDarkTheme -> DarkColors
-        else -> LightColors
+        useDarkTheme -> darkColors
+        else -> lightColors
     }
 
     MaterialTheme(

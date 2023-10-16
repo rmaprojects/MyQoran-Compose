@@ -15,6 +15,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,7 +31,7 @@ object AppModule {
     @Singleton
     fun provideQoranDatabase(app: Application): QoranDatabase {
         return Room.databaseBuilder(
-            app,
+            app.applicationContext,
             QoranDatabase::class.java,
             QoranDatabase.DATABASE_NAME,
         ).createFromInputStream {
@@ -43,9 +45,11 @@ object AppModule {
         val loggingInterceptor =
             if (BuildConfig.DEBUG) HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             else HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
+
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
+
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)
             .client(client)
@@ -61,7 +65,7 @@ object AppModule {
             app.applicationContext,
             BookmarkDatabase::class.java,
             BookmarkDatabase.DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides
@@ -72,12 +76,20 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideExternalCoroutineScope(): CoroutineScope {
+        return CoroutineScope(Dispatchers.IO)
+    }
+
+    @Provides
+    @Singleton
     fun provideLocationClient(
-        app: Application
+        app: Application,
+        coroutineScope: CoroutineScope
     ): LocationClient {
         return LocationClientImpl(
-            app.applicationContext,
-            LocationServices.getFusedLocationProviderClient(app.applicationContext)
+            app,
+            LocationServices.getFusedLocationProviderClient(app.applicationContext),
+            coroutineScope
         )
     }
 }

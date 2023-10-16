@@ -29,7 +29,6 @@ import com.rmaproject.myqoran.ui.screen.bookmark.component.BookmarkCard
 import com.rmaproject.myqoran.ui.screen.bookmark.state.BookmarkState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookmarkScreen(
     navigateUp: () -> Unit,
@@ -105,7 +104,7 @@ fun BookmarkScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookmarkContent(
     state: BookmarkState<List<Bookmark>>,
@@ -136,36 +135,36 @@ fun BookmarkContent(
                     key = { _, item -> item.id!! }
                 ) { _, bookmark ->
                     val dismissState = rememberDismissState(
-                        confirmStateChange = {
+                        confirmValueChange = {
                             if (it == DismissValue.DismissedToStart) {
                                 deleteBookmark(bookmark)
                             }
                             true
                         }
                     )
-
                     SwipeToDismiss(
                         state = dismissState,
                         background = {
                             MaterialTheme.colorScheme.background
                         },
-                        directions = setOf(DismissDirection.EndToStart)
-                    ) {
-                        BookmarkCard(
-                            modifier = Modifier.padding(8.dp),
-                            id = bookmark.id!!,
-                            surahName = bookmark.surahName!!,
-                            surahNumber = bookmark.surahNumber,
-                            juzNumber = bookmark.juzNumber,
-                            pageNumber = bookmark.pageNumber,
-                            ayahNumber = bookmark.ayahNumber!!,
-                            indexType = bookmark.indexType!!,
-                            position = bookmark.positionScroll!!,
-                            dateAdded = bookmark.timeStamp,
-                            textQoran = bookmark.textQoran!!,
-                            navigateToRead = navigateToRead
-                        )
-                    }
+                        directions = setOf(DismissDirection.EndToStart),
+                        dismissContent = {
+                            BookmarkCard(
+                                modifier = Modifier.padding(8.dp),
+                                id = bookmark.id!!,
+                                surahName = bookmark.surahName!!,
+                                surahNumber = bookmark.surahNumber,
+                                juzNumber = bookmark.juzNumber,
+                                pageNumber = bookmark.pageNumber,
+                                ayahNumber = bookmark.ayahNumber!!,
+                                indexType = bookmark.indexType!!,
+                                position = bookmark.positionScroll!!,
+                                dateAdded = bookmark.timeStamp,
+                                textQoran = bookmark.textQoran!!,
+                                navigateToRead = navigateToRead
+                            )
+                        }
+                    )
                 }
             }
         }

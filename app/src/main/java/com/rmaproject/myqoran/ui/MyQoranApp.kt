@@ -1,7 +1,6 @@
 package com.rmaproject.myqoran.ui
 
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -35,7 +34,6 @@ import com.rmaproject.myqoran.ui.screen.settings.SettingsScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyQoranApp(
     navController: NavHostController = rememberNavController(),
@@ -109,22 +107,26 @@ fun MyQoranApp(
                         )
                     })
             }
-            composable(route = Screen.ReadQoran.route, arguments = listOf(navArgument("indexType") {
-                type = NavType.IntType
-                defaultValue = 1
-            }, navArgument("surahNumber") {
-                type = NavType.IntType
-                defaultValue = 1
-            }, navArgument("juzNumber") {
-                type = NavType.IntType
-                defaultValue = 1
-            }, navArgument("pageNumber") {
-                type = NavType.IntType
-                defaultValue = 1
-            }, navArgument("scrollPosition") {
-                type = NavType.IntType
-                defaultValue = 0
-            })) {
+            composable(route = Screen.ReadQoran.route,
+                arguments = listOf(
+                    navArgument("indexType") {
+                        type = NavType.IntType
+                        defaultValue = 1
+                    }, navArgument("surahNumber") {
+                        type = NavType.IntType
+                        defaultValue = 1
+                    }, navArgument("juzNumber") {
+                        type = NavType.IntType
+                        defaultValue = 1
+                    }, navArgument("pageNumber") {
+                        type = NavType.IntType
+                        defaultValue = 1
+                    }, navArgument("scrollPosition") {
+                        type = NavType.IntType
+                        defaultValue = 0
+                    }
+                )
+            ) {
                 ReadQoranScreen(
                     navigateUp = { navController.navigateUp() },
                     navigateToSearchAyah = { navController.navigate(Screen.SearchAyah.route) },

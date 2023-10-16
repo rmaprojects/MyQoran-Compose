@@ -33,4 +33,12 @@
     <string name="txt_many_ayah">%1$s Ayah(s)</string>
     <string name="txt_question_delete_all_bookmark">Hapus semua bookmark?</string>
     <string name="txt_warn_cannot_undo">Aksi ini tidak dapat dipulihkan</string>
+    <string-array name="txt_tab_items">
+        <item>Surat</item>
+        <item>Juz</item>
+        <item>Halaman</item>
+    </string-array>
+    <string name="txt_err_others">Gagal mendapatkan lokasi</string>
+    <string name="txt_err_permission_missing">Tolong berikan izin lokasi untuk aplikasi ini</string>
+    <string name="txt_err_gps_off">GPS belum diaktifkan, tolong aktifkan</string>
 </resources>

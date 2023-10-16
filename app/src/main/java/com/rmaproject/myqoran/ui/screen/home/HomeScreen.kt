@@ -1,41 +1,49 @@
 package com.rmaproject.myqoran.ui.screen.home
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.Text
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.FastScrollItem
 import com.rmaproject.myqoran.components.MyQoranHomeAppBar
 import com.rmaproject.myqoran.data.kotpref.LastReadPreferences
 import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
-import com.rmaproject.myqoran.ui.screen.home.components.*
+import com.rmaproject.myqoran.ui.screen.home.components.HeaderCard
+import com.rmaproject.myqoran.ui.screen.home.components.JuzCardItem
+import com.rmaproject.myqoran.ui.screen.home.components.PageCardItem
+import com.rmaproject.myqoran.ui.screen.home.components.SurahCardItem
+import com.rmaproject.myqoran.utils.Converters.mapToJuzIndexing
 import kotlinx.coroutines.launch
 import my.nanihadesuka.compose.LazyColumnScrollbar
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     navigateToReadQoran: (Int, Int?, Int?, Int?) -> Unit,
@@ -48,8 +56,10 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
+    val tabItems = stringArrayResource(id = R.array.txt_tab_items)
+
     val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(pageCount = { tabItems.size })
 
     val surahScrollState = rememberLazyListState()
     val juzScrollState = rememberLazyListState()
@@ -121,34 +131,26 @@ fun HomeScreen(
                 TabRow(
                     modifier = Modifier.height(48.dp),
                     selectedTabIndex = pagerState.currentPage,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    backgroundColor = MaterialTheme.colorScheme.surface
                 ) {
-                    tabItems.forEachIndexed { index, tabItem ->
+                    tabItems.forEachIndexed { index, title ->
                         Tab(
+                            modifier = Modifier.height(48.dp),
                             selected = pagerState.currentPage == index,
                             onClick = {
                                 scope.launch {
                                     pagerState.animateScrollToPage(index)
                                 }
-                            },
-                            selectedContentColor = MaterialTheme.colorScheme.primary,
-                            unselectedContentColor = MaterialTheme.colorScheme.onSurface
+                            }
                         ) {
-                            Text(text = tabItem.title)
+                            Text(text = title)
                         }
                     }
                 }
                 HorizontalPager(
-                    count = tabItems.size,
                     state = pagerState,
                     modifier = Modifier
                         .fillMaxSize(),
+                    userScrollEnabled = false
                 ) { currentPage ->
                     when (currentPage) {
                         ORDER_BY_SURAH -> {
@@ -163,8 +165,7 @@ fun HomeScreen(
                                 },
                             ) {
                                 LazyColumn(
-                                    state = surahScrollState,
-                                    modifier = Modifier.offset(currentPageOffset.dp),
+                                    state = surahScrollState
                                 ) {
                                     items(
                                         surahState.surahList ?: emptyList(),
@@ -178,7 +179,9 @@ fun HomeScreen(
                                             navigateToReadQoran = {
                                                 navigateToReadQoran(
                                                     ORDER_BY_SURAH,
-                                                    surah.surahNumber, null, null
+                                                    surah.surahNumber,
+                                                    null,
+                                                    null
                                                 )
                                             }
                                         )
@@ -186,6 +189,7 @@ fun HomeScreen(
                                 }
                             }
                         }
+
                         ORDER_BY_JUZ -> {
                             LazyColumnScrollbar(
                                 listState = juzScrollState,
@@ -201,17 +205,19 @@ fun HomeScreen(
                                 }
                             ) {
                                 LazyColumn(
-                                    state = juzScrollState,
-                                    modifier = Modifier.offset(currentPageOffset.dp)
+                                    state = juzScrollState
                                 ) {
-                                    items(juzState.juzList ?: emptyList()) { juz ->
+                                    val juzByIndexSurah = juzState.juzList?.mapToJuzIndexing()
+                                    items(juzByIndexSurah ?: emptyList()) { juzMap ->
                                         JuzCardItem(
-                                            juzNumber = juz.juzNumber!!,
-                                            navigateToReadQoran = {
+                                            juzNumber = juzMap.juzNumber ?: 0,
+                                            surahList = juzMap.surahList,
+                                            surahNumberList = juzMap.surahNumberList,
+                                            navigateToReadQoran = { surahNumber ->
                                                 navigateToReadQoran(
                                                     ORDER_BY_JUZ,
-                                                    null,
-                                                    juz.juzNumber,
+                                                    surahNumber,
+                                                    juzMap.juzNumber,
                                                     null
                                                 )
                                             }
@@ -220,6 +226,7 @@ fun HomeScreen(
                                 }
                             }
                         }
+
                         ORDER_BY_PAGE -> {
                             LazyColumnScrollbar(
                                 listState = pageScrollState,
@@ -235,8 +242,7 @@ fun HomeScreen(
                                 }
                             ) {
                                 LazyColumn(
-                                    state = pageScrollState,
-                                    modifier = Modifier.offset(currentPageOffset.dp)
+                                    state = pageScrollState
                                 ) {
                                     items(pageState.qoranByPageList ?: emptyList()) { qoranByPage ->
                                         PageCardItem(

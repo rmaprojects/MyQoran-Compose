@@ -11,6 +11,5 @@ data class Page(
     @ColumnInfo(name = "sora") val surahNumber: Int? = 0,
     @ColumnInfo(name = "aya_no") val AyahNumber: Int? = 0,
     @ColumnInfo(name = "sora_name_en") val SurahName_en: String? = "",
-    @ColumnInfo(name = "ayah_total") val numberOfAyah: Int? = 0,
     @ColumnInfo(name = "sora_name_ar") val SurahName_ar: String? = ""
 )
