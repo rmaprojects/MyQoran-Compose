@@ -33,26 +33,13 @@ object Converters {
         return translation.let { pattern.matcher(it).replaceAll("") }
     }
 
-    private fun reverseAyahTextNumber(ayahText: String?): String {
-        val digit = mutableListOf<Char>()
-        ayahText?.forEach {
-            if (it.isDigit()) {
-                digit.add(it)
-            }
-        }
-        val ayahNumberArabic = digit.joinToString("")
-        val textWithoutNumber = ayahText?.replace(ayahNumberArabic, "")
-        return textWithoutNumber + digit.reversed().joinToString("")
-    }
-
     fun applyTajweed(
         context: Context,
         ayahText: String
     ): Spannable {
-        val reversedAyahText = reverseAyahTextNumber(ayahText)
         return TajweedHelper.getTajweed(
             context,
-            reversedAyahText
+            ayahText
         )
     }
 
