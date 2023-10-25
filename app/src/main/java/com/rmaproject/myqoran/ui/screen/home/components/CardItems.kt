@@ -18,10 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rmaproject.myqoran.R
-import com.rmaproject.myqoran.ui.theme.MyQoranComposeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -304,32 +302,6 @@ fun JuzCardMiniItem(
                     }
                 }
             }
-        }
-    }
-}
-
-
-@Preview
-@Composable
-fun JuzCardMiniItemPreview() {
-    MyQoranComposeTheme(useDarkTheme = false) {
-        Surface {
-            Spacer(modifier = Modifier.height(120.dp))
-            JuzCardMiniItem(
-                listOf(
-                    "Mamang",
-                    "Miming",
-                    "Memeng"
-                ),
-                listOf(
-                    1,
-                    2,
-                    3
-                ),
-                {},
-                modifier = Modifier
-                    .padding(12.dp),
-            )
         }
     }
 }

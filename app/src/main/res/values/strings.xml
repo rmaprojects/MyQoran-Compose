@@ -36,9 +36,23 @@
     <string name="txt_err_others">Error when getting Location</string>
     <string name="txt_err_permission_missing">Please give this app permission for your location</string>
     <string name="txt_err_gps_off">GPS is not Activated</string>
+    <string name="txt_prev_onboarding">Previous</string>
+    <string name="txt_next_onboarding">Next</string>
+    <string name="txt_finish_onboarding">Finish</string>
+    <string name="txt_finished_onboarding">Finished!</string>
     <string-array name="txt_tab_items">
         <item>Surah</item>
         <item>Juz</item>
         <item>Page</item>
     </string-array>
+    <string name="txt_welcome_myqoran_onboarding">Welcome to MyQoran!</string>
+    <string name="txt_finish_app_introduction_first">Please finish the app introduction first</string>
+    <string name="txt_press_next_to_start">Press \"Next\" to start!</string>
+    <string name="txt_allow_location_onboarding">Allow Location Access</string>
+    <string name="txt_desc_allow_location_onboarding">The app will get adzan schedule based on your location now (You can turn the permission on/off later on settings)</string>
+    <string name="txt_change_lang_onboarding">Change Language</string>
+    <string name="txt_desc_change_lang_onboarding">MyQoran provides Qoran translation in 2 languages, please choose the one you comfort with\n(You can change it later in settings)</string>
+    <string name="txt_dark_mode_onboarding">Dark Mode</string>
+    <string name="txt_dark_mode_desc_onboarding">You can change color scheme of the app to dark color scheme or light color scheme, choose the one that fit in your eyes</string>
+    <string name="txt_please_use_app_onboarding">You can use the app now!</string>
 </resources>

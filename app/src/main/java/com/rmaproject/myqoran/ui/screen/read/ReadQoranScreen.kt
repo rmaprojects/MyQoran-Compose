@@ -1,6 +1,5 @@
 package com.rmaproject.myqoran.ui.screen.read
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -55,7 +54,7 @@ import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.FastScrollItem
 import com.rmaproject.myqoran.data.kotpref.LastReadPreferences
 import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
-import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
+import com.rmaproject.myqoran.ui.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_JUZ
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_PAGE
 import com.rmaproject.myqoran.ui.screen.home.ORDER_BY_SURAH
@@ -77,7 +76,6 @@ import my.nanihadesuka.compose.LazyColumnScrollbar
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class
-
 )
 @Composable
 fun ReadQoranScreen(
@@ -114,6 +112,7 @@ fun ReadQoranScreen(
 
     val qoranAyahList by viewModel.qoranState
     val playType = viewModel.playerType
+    val playMode = viewModel.playMode
     val isPlayerPlaying = viewModel.isPlayerPlaying.collectAsState()
     val footNotesState = remember { mutableStateOf("") }
 
@@ -142,10 +141,15 @@ fun ReadQoranScreen(
                 lazyColumnState.scrollToItem(viewModel.lastPosition)
             } else {
                 delay(300)
-                val indexToScroll = qoranAyahList.listAyah?.indexOfFirst { it.surahNumber == viewModel.surahNumber }
+                val indexToScroll =
+                    qoranAyahList.listAyah?.indexOfFirst { it.surahNumber == viewModel.surahNumber }
                 if (viewModel.surahNumber > 100) {
                     delay(300)
-                    lazyColumnState.scrollToItem(indexToScroll ?: 0)
+                    if (indexToScroll == -1 || indexToScroll == null) {
+                        lazyColumnState.scrollToItem(0)
+                    } else {
+                        lazyColumnState.scrollToItem(indexToScroll)
+                    }
                 }
             }
         }
@@ -240,10 +244,12 @@ fun ReadQoranScreen(
                                 currentPlaying = it.value,
                                 playType = playType.value,
                                 isPlayerPlaying = isPlayerPlaying.value,
+                                playMode = playMode.value,
                                 onSkipNextClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipNext) },
                                 onPlayPauseClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.PlayPauseAyah) },
                                 onSkipPrevClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.SkipPrevious) },
-                                onStopClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.StopAyah) }
+                                onStopClick = { viewModel.onPlayAyahEvent(PlayAyahEvent.StopAyah) },
+                                onChangePlayerMode = { viewModel.onPlayAyahEvent(PlayAyahEvent.ChangePlayerMode) }
                             )
                         }
                     }
@@ -340,9 +346,6 @@ fun ReadQoranScreen(
                                                 modifier = Modifier.padding(vertical = 8.dp),
                                                 ayahNumber = qoran.ayahNumber!!,
                                                 onPlayAyahClick = {
-
-
-
                                                     viewModel.onEvent(
                                                         ReadQoranEvent.PlayAyah(
                                                             ayahNumber = qoran.ayahNumber,
@@ -444,10 +447,12 @@ fun ReadQoranScreen(
                         content = {
                             FootNotesBottomSheet(
                                 footNotesContent = footNotesState.value,
-                                hideBottomSheet = { scope.launch {
-                                    bottomSheetState.hide()
-                                    isBottomSheetShowed = false
-                                } }
+                                hideBottomSheet = {
+                                    scope.launch {
+                                        bottomSheetState.hide()
+                                        isBottomSheetShowed = false
+                                    }
+                                }
                             )
                         },
                         onDismissRequest = {

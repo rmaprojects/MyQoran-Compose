@@ -15,6 +15,7 @@ object SettingsPreferences : KotprefModel() {
     var currentLanguage by intPref(INDONESIAN)
     var currentQoriOption by enumOrdinalPref(QoriOptions.ABD_SUDAIS)
     var ayahTextSize by floatPref(SLIDER_DEF_VALUE)
+    var isOnBoarding by booleanPref(true)
 
     override fun clear() {
         super.clear()

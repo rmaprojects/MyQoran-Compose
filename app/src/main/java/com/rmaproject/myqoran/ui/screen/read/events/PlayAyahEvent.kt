@@ -6,4 +6,5 @@ sealed class PlayAyahEvent {
     object PauseAyah: PlayAyahEvent()
     object SkipNext: PlayAyahEvent()
     object StopAyah: PlayAyahEvent()
+    object ChangePlayerMode: PlayAyahEvent()
 }

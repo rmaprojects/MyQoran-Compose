@@ -41,4 +41,18 @@
     <string name="txt_err_others">Gagal mendapatkan lokasi</string>
     <string name="txt_err_permission_missing">Tolong berikan izin lokasi untuk aplikasi ini</string>
     <string name="txt_err_gps_off">GPS belum diaktifkan, tolong aktifkan</string>
+    <string name="txt_finish_app_introduction_first">Selesaikan pengenalan aplikasi terlebih dahulu</string>
+    <string name="txt_prev_onboarding">Sebelumnya</string>
+    <string name="txt_next_onboarding">Lanjut</string>
+    <string name="txt_finish_onboarding">Selesai</string>
+    <string name="txt_welcome_myqoran_onboarding">Selamat Datang di MyQoran!</string>
+    <string name="txt_press_next_to_start">Klik \"Lanjut\" untuk memulai!</string>
+    <string name="txt_allow_location_onboarding">Izinkan Akses Lokasi</string>
+    <string name="txt_desc_allow_location_onboarding">Aplikasi ingin mengambil lokasimu untuk mengambil data Jadwal Adzan terkini di daerahmu (Kamu juga bisa memilih untuk menonaktifkannya)</string>
+    <string name="txt_change_lang_onboarding">Ganti Bahasa</string>
+    <string name="txt_desc_change_lang_onboarding">MyQoran menyediakan terjemahan Al-Quran dalam 2 bahasa, silahkan pilih bahasa terjemahan yang anda inginkan\\n(Anda bisa menggantinya nanti di pengaturan)</string>
+    <string name="txt_dark_mode_onboarding">Mode Gelap</string>
+    <string name="txt_dark_mode_desc_onboarding">Anda bisa mengganti skema warna aplikasi ini menjadi gelap atau terang sesuai selera anda</string>
+    <string name="txt_finished_onboarding">Selesai!</string>
+    <string name="txt_please_use_app_onboarding">Silahkan gunakan aplikasi ini!</string>
 </resources>

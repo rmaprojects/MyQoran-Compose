@@ -1,23 +1,40 @@
 package com.rmaproject.myqoran.ui.screen.read.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.RepeatOne
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rmaproject.myqoran.data.kotpref.SettingsPreferences
 import com.rmaproject.myqoran.ui.screen.read.ReadQoranViewModel
+import snow.player.PlayMode
 
 @Composable
 fun PlayerControlPanelBottomBar(
     onSkipPrevClick: () -> Unit,
     onSkipNextClick: () -> Unit,
     onPlayPauseClick: () -> Unit,
+    onChangePlayerMode: () -> Unit,
     onStopClick: () -> Unit,
     playType: ReadQoranViewModel.PlayType,
+    playMode: PlayMode,
     isPlayerPlaying: Boolean,
     modifier: Modifier = Modifier,
     currentPlaying: String = "",
@@ -71,6 +88,15 @@ fun PlayerControlPanelBottomBar(
                         Icons.Default.Stop,
                         contentDescription = "Stop Player"
                     )
+                }
+                if (playType == ReadQoranViewModel.PlayType.PLAY_SINGLE) {
+                    IconButton(onClick = onChangePlayerMode) {
+                        Icon(
+                            imageVector = if (playMode == PlayMode.PLAYLIST_LOOP) Icons.Default.Repeat
+                            else Icons.Default.RepeatOne,
+                            contentDescription = "Loop Player"
+                        )
+                    }
                 }
             }
         }

@@ -10,4 +10,5 @@ object GlobalState {
     var isDarkMode by mutableStateOf(SettingsPreferences.isDarkMode)
     var ayahTextSize by mutableFloatStateOf(SettingsPreferences.ayahTextSize)
     var isFocusRead by mutableStateOf(SettingsPreferences.isFocusReadActive)
+    var isOnBoarding by mutableStateOf(SettingsPreferences.isOnBoarding)
 }

@@ -34,7 +34,7 @@ import com.rmaproject.myqoran.R
 import com.rmaproject.myqoran.components.FastScrollItem
 import com.rmaproject.myqoran.components.MyQoranHomeAppBar
 import com.rmaproject.myqoran.data.kotpref.LastReadPreferences
-import com.rmaproject.myqoran.ui.navigation.MyQoranSharedViewModel
+import com.rmaproject.myqoran.ui.MyQoranSharedViewModel
 import com.rmaproject.myqoran.ui.screen.home.components.HeaderCard
 import com.rmaproject.myqoran.ui.screen.home.components.JuzCardItem
 import com.rmaproject.myqoran.ui.screen.home.components.PageCardItem

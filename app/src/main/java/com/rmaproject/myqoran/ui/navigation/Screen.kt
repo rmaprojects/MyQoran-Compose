@@ -23,6 +23,7 @@ sealed class Screen(val route: String) {
     object Bookmarks: Screen("Bookmarks")
     object SearchSurah: Screen("SearchSurah")
     object SearchAyah: Screen("SearchAyah")
+    object OnBoarding: Screen("OnBoarding")
 }
 
 class MyQoranNavigationActions(navController: NavController) {
@@ -60,6 +61,16 @@ class MyQoranNavigationActions(navController: NavController) {
             }
             launchSingleTop = true
             restoreState = true
+        }
+    }
+    val navigateFromHomeToOnBoarding: () -> Unit = {
+        navController.navigate(Screen.OnBoarding.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                inclusive = true
+                saveState = true
+            }
+            restoreState = false
+            launchSingleTop = true
         }
     }
 }

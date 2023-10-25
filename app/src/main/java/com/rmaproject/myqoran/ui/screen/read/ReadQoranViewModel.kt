@@ -76,6 +76,7 @@ class ReadQoranViewModel @Inject constructor(
 
     val playerType = mutableStateOf(PlayType.NONE)
     val isPlayerPlaying = MutableStateFlow(playerClient.isPlaying)
+    val playMode = mutableStateOf(PlayMode.SINGLE_ONCE)
 
     fun onEvent(event: ReadQoranEvent) {
         when (event) {
@@ -121,6 +122,7 @@ class ReadQoranViewModel @Inject constructor(
                 playerClient.connect {
                     playerClient.setPlaylist(playlist, true)
                     playerClient.playMode = PlayMode.SINGLE_ONCE
+                    playMode.value = PlayMode.SINGLE_ONCE
                     _currentPlayedAyah.value = "${event.surahName}: ${event.ayahNumber}"
                     playerType.value = PlayType.PLAY_SINGLE
                     if (playerClient.isError) {
@@ -171,6 +173,7 @@ class ReadQoranViewModel @Inject constructor(
                 playerClient.connect {
                     playerClient.setPlaylist(playlist, true)
                     playerClient.playMode = PlayMode.PLAYLIST_LOOP
+                    playMode.value = PlayMode.PLAYLIST_LOOP
                     playerType.value = PlayType.PLAY_ALL
                     playerClient.addOnPlayingMusicItemChangeListener { _, position, _ ->
                         val surahName = event.qoranList[position].surahNameEn
@@ -202,6 +205,16 @@ class ReadQoranViewModel @Inject constructor(
             is PlayAyahEvent.SkipPrevious -> playerClient.skipToPrevious()
             is PlayAyahEvent.StopAyah -> {
                 playerClient.stop(); playerType.value = PlayType.NONE; playerClient.shutdown()
+            }
+            PlayAyahEvent.ChangePlayerMode -> {
+                if (playerClient.playMode == PlayMode.PLAYLIST_LOOP) {
+                    playerClient.playMode = PlayMode.SINGLE_ONCE
+                    playMode.value = PlayMode.SINGLE_ONCE
+                }
+                else {
+                    playerClient.playMode = PlayMode.PLAYLIST_LOOP
+                    playMode.value = PlayMode.PLAYLIST_LOOP
+                }
             }
         }
     }
